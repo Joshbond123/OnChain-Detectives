@@ -245,10 +245,6 @@ export default function Home() {
                 a: "While we cannot 'undo' a transaction, we can trace the funds until they reach a centralized point (like an exchange) where they can be frozen via legal intervention."
               },
               {
-                q: "What information do I need to provide?",
-                a: "The most critical piece of information is the wallet address where you sent the funds and the transaction hash (TXID)."
-              },
-              {
                 q: "How long does the process take?",
                 a: "Preliminary investigations take 24-48 hours. The full recovery process depends on the complexity of the scam and the speed of legal entities, typically ranging from 2 weeks to 3 months."
               }
@@ -267,7 +263,6 @@ export default function Home() {
       </section>
 
       <Footer />
-      <WhatsAppButton />
     </div>
   );
 }
