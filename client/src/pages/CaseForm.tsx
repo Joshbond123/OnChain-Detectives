@@ -18,6 +18,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Shield, ArrowRight, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export default function CaseForm() {
   const { toast } = useToast();
@@ -46,10 +49,9 @@ export default function CaseForm() {
         description: "Redirecting you to our investigative team on WhatsApp...",
       });
       
-      // WhatsApp redirection logic
       const message = `Hello OnChain Detectives, I just submitted a recovery case.\n\nName: ${data.name}\nWallet: ${data.walletAddress}\nAmount: ${data.amountLost || 'Not specified'}`;
       const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/1234567890?text=${encodedMessage}`; // Replace with actual business number
+      const whatsappUrl = `https://wa.me/1234567890?text=${encodedMessage}`;
       
       setTimeout(() => {
         window.location.href = whatsappUrl;
@@ -69,131 +71,138 @@ export default function CaseForm() {
   }
 
   return (
-    <div className="container max-w-2xl py-12 px-4">
-      <Card className="glass-card border-primary/20">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-            <Shield className="text-primary w-6 h-6" />
-          </div>
-          <CardTitle className="text-3xl font-bold tracking-tight">Start Your Recovery</CardTitle>
-          <CardDescription className="text-muted-foreground">
-            Provide the details of your case. Our detectives will review it immediately.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John Doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="john@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+    <div className="flex flex-col min-h-screen w-full bg-background selection:bg-primary/30">
+      <Header />
+      <main className="flex-1 pt-32 pb-24">
+        <div className="container max-w-2xl px-4 mx-auto">
+          <Card className="glass-card border-primary/20 shadow-2xl">
+            <CardHeader className="text-center space-y-2">
+              <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                <Shield className="text-primary w-8 h-8" />
               </div>
+              <CardTitle className="text-4xl font-display font-bold tracking-tight">Start Your Recovery</CardTitle>
+              <CardDescription className="text-muted-foreground text-lg">
+                Provide the details of your case. Our detectives will review it immediately.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Full Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="John Doe" className="h-12 bg-white/5 border-white/10" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email Address</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="john@example.com" className="h-12 bg-white/5 border-white/10" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-              <FormField
-                control={form.control}
-                name="walletAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Scammer's Wallet Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="0x..." className="font-mono" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="walletAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Scammer's Wallet Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="0x..." className="h-12 bg-white/5 border-white/10 font-mono" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="amountLost"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Amount Lost (USD/Crypto)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. 5,000 USDT" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="platform"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Platform/Exchange</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. Binance, MetaMask" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="amountLost"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Amount Lost (USD/Crypto)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. 5,000 USDT" className="h-12 bg-white/5 border-white/10" {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="platform"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Platform/Exchange</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. Binance, MetaMask" className="h-12 bg-white/5 border-white/10" {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Describe the Incident</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Please provide details about how the scam occurred..."
-                        className="min-h-[120px] resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Describe the Incident</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Please provide details about how the scam occurred..."
+                            className="min-h-[150px] bg-white/5 border-white/10 resize-none p-4"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <Button 
-                type="submit" 
-                className="w-full h-12 text-lg font-bold" 
-                disabled={mutation.isPending}
-              >
-                {mutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    Submit & Connect to WhatsApp
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </>
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+                  <Button 
+                    type="submit" 
+                    className="w-full h-14 text-xl font-bold shadow-xl shadow-primary/20" 
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        Submit & Connect to WhatsApp
+                        <ArrowRight className="ml-2 h-6 w-6" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+      <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
