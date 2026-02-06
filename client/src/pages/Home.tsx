@@ -206,11 +206,11 @@ export default function Home() {
                   <span className="font-mono text-sm tracking-wider uppercase text-primary/80">BLOCKCHAIN_SCAN_IN_PROGRESS...</span>
                 </div>
                 <div className="space-y-6 font-mono text-xs md:text-sm text-muted-foreground leading-relaxed">
-                  <p className="text-primary font-bold tracking-widest">> INITIALIZING TRACE_PROTOCOL_V4.2</p>
-                  <p>> SCANNING WALLET: 0x71C...4f92</p>
-                  <p className="text-accent font-bold">> PATH DETECTED: BRIDGE_OPTIMISM {"->"} ETH_MAINNET</p>
-                  <p>> ANALYZING MIXER SIGNATURES... [DONE]</p>
-                  <p className="text-primary font-bold">> GENERATING FORENSIC_REPORT.PDF [COMPLETED]</p>
+                  <p className="text-primary font-bold tracking-widest">{">"} INITIALIZING TRACE_PROTOCOL_V4.2</p>
+                  <p>{">"} SCANNING WALLET: 0x71C...4f92</p>
+                  <p className="text-accent font-bold">{">"} PATH DETECTED: BRIDGE_OPTIMISM {"->"} ETH_MAINNET</p>
+                  <p>{">"} ANALYZING MIXER SIGNATURES... [DONE]</p>
+                  <p className="text-primary font-bold">{">"} GENERATING FORENSIC_REPORT.PDF [COMPLETED]</p>
                   <div className="pt-6 border-t border-primary/10 flex items-center gap-4">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
                     <span className="text-green-500 font-bold uppercase tracking-widest">Target Exchange Located: KRAKEN.COM</span>

@@ -21,5 +21,7 @@ export const insertSubmissionSchema = createInsertSchema(submissions).omit({
   walletAddress: z.string().min(10, "Wallet address too short"),
 });
 
+export const insertInquirySchema = insertSubmissionSchema; // Temporary alias for backward compatibility
+
 export type InsertSubmission = z.infer<typeof insertSubmissionSchema>;
 export type Submission = typeof submissions.$inferSelect;
