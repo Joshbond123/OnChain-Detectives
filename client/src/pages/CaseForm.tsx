@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { insertSubmissionSchema, type InsertSubmission } from "@shared/schema";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { insertSubmissionSchema, type InsertSubmission, type AdminSettings } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
