@@ -6,12 +6,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "./pages/Home";
 import CaseForm from "./pages/CaseForm";
+import AdminPanel from "./pages/AdminPanel";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/start-case" component={CaseForm} />
+      <Route path="/admin-access" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>
   );

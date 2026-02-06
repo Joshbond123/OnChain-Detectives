@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { ShieldCheck, Menu, X, Globe, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,21 @@ import { motion, AnimatePresence } from "framer-motion";
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const [, setLocation] = useLocation();
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const newCount = clickCount + 1;
+    if (newCount >= 5) {
+      setClickCount(0);
+      setLocation("/admin-access");
+    } else {
+      setClickCount(newCount);
+      // Reset count after 3 seconds of inactivity
+      setTimeout(() => setClickCount(0), 3000);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +53,7 @@ export function Header() {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
               <div className="relative z-10 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-xl shadow-primary/20">

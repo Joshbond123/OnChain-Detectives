@@ -38,6 +38,10 @@ export default function CaseForm() {
     },
   });
 
+  const { data: settings } = useQuery<AdminSettings>({
+    queryKey: ["/api/admin/settings"],
+  });
+
   const mutation = useMutation({
     mutationFn: async (data: InsertSubmission) => {
       const res = await apiRequest("POST", "/api/submissions", data);
@@ -49,9 +53,12 @@ export default function CaseForm() {
         description: "Redirecting you to our investigative team on WhatsApp...",
       });
       
+      const whatsappNumber = settings?.whatsappNumber || "1234567890";
       const message = `Hello OnChain Detectives, I just submitted a recovery case.\n\nName: ${data.name}\nWallet: ${data.walletAddress}\nAmount: ${data.amountLost || 'Not specified'}`;
       const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/1234567890?text=${encodedMessage}`;
+      
+      // Attempting to use universal links for better app detection
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
       
       setTimeout(() => {
         window.location.href = whatsappUrl;

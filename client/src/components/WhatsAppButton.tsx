@@ -1,10 +1,19 @@
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import type { AdminSettings } from "@shared/schema";
 
 export function WhatsAppButton() {
+  const { data: settings } = useQuery<AdminSettings>({
+    queryKey: ["/api/admin/settings"],
+  });
+
+  const whatsappNumber = settings?.whatsappNumber || "1234567890";
+  const whatsappUrl = `https://wa.me/${whatsappNumber}`;
+
   return (
     <motion.a
-      href="https://wa.me/15550123456" 
+      href={whatsappUrl} 
       target="_blank"
       rel="noopener noreferrer"
       data-testid="link-whatsapp-floating"
