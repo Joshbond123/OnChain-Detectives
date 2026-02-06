@@ -13,6 +13,12 @@ export const submissions = pgTable("submissions", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const adminSettings = pgTable("admin_settings", {
+  id: serial("id").primaryKey(),
+  password: text("password").notNull().default("12345"),
+  whatsappNumber: text("whatsapp_number").notNull().default(""),
+});
+
 export const insertSubmissionSchema = createInsertSchema(submissions).omit({
   id: true,
   createdAt: true,
@@ -21,7 +27,11 @@ export const insertSubmissionSchema = createInsertSchema(submissions).omit({
   walletAddress: z.string().min(10, "Wallet address too short"),
 });
 
-export const insertInquirySchema = insertSubmissionSchema; // Temporary alias for backward compatibility
+export const insertAdminSettingsSchema = createInsertSchema(adminSettings).omit({
+  id: true,
+});
 
 export type InsertSubmission = z.infer<typeof insertSubmissionSchema>;
 export type Submission = typeof submissions.$inferSelect;
+export type AdminSettings = typeof adminSettings.$inferSelect;
+export type InsertAdminSettings = z.infer<typeof insertAdminSettingsSchema>;

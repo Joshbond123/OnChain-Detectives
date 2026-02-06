@@ -21,5 +21,34 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/admin/submissions", async (req, res) => {
+    const subs = await storage.getSubmissions();
+    res.json(subs);
+  });
+
+  app.get("/api/admin/settings", async (req, res) => {
+    const settings = await storage.getAdminSettings();
+    res.json(settings);
+  });
+
+  app.post("/api/admin/settings", async (req, res) => {
+    try {
+      const updated = await storage.updateAdminSettings(req.body);
+      res.json(updated);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to update settings" });
+    }
+  });
+
+  app.post("/api/admin/auth", async (req, res) => {
+    const { password } = req.body;
+    const settings = await storage.getAdminSettings();
+    if (password === settings.password) {
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ message: "Invalid password" });
+    }
+  });
+
   return httpServer;
 }
