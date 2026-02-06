@@ -18,7 +18,7 @@ export function WhatsAppButton() {
       <MessageCircle className="w-9 h-9 text-white" />
       
       <span className="absolute right-full mr-4 bg-white/10 backdrop-blur-xl text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-xl border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0 whitespace-nowrap pointer-events-none shadow-2xl">
-        Expert Response Available
+        Chat With Us
       </span>
       
       <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-background animate-pulse flex items-center justify-center">

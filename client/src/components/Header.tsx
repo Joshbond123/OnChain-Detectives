@@ -50,7 +50,7 @@ export function Header() {
                 ONCHAIN<span className="text-primary">DETECTIVES</span>
               </span>
               <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] font-bold text-muted-foreground group-hover:text-accent transition-colors">
-                Asset Recovery Bureau
+                Asset Recovery
               </span>
             </div>
           </Link>

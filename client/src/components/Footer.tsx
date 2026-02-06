@@ -29,22 +29,22 @@ export function Footer() {
           </div>
           
           <div className="lg:col-span-2">
-            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Bureau</h4>
+            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Resources</h4>
             <ul className="space-y-4">
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">Core Services</a></li>
-              <li><a href="#process" className="text-muted-foreground hover:text-primary transition-colors font-medium">Our Framework</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Public Reports</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Verify Analyst</a></li>
+              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">Services</a></li>
+              <li><a href="#process" className="text-muted-foreground hover:text-primary transition-colors font-medium">Process</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Reports</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Verification</a></li>
             </ul>
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Transparency</h4>
+            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Policy</h4>
             <ul className="space-y-4">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Data Policy</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Legal Status</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Terms of Use</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Contact Desk</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Privacy</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Legal</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Terms</a></li>
+              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Contact</a></li>
             </ul>
           </div>
 
@@ -75,15 +75,12 @@ export function Footer() {
 
         <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-sm text-muted-foreground font-medium">
-            &copy; {new Date().getFullYear()} OnChain Detectives Bureau. Secured by Blockchain Encryption.
+            &copy; {new Date().getFullYear()} OnChain Detectives. Secured by Blockchain Encryption.
           </div>
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Systems Online</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Version 4.2.0-F</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Active</span>
             </div>
           </div>
         </div>
