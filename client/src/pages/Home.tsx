@@ -145,8 +145,8 @@ export default function Home() {
               },
               {
                 icon: Shield,
-                title: "Exchange Freezing",
-                desc: "We work directly with major crypto exchanges to flag and freeze stolen funds before they can be cashed out."
+                title: "Exchange Collaboration",
+                desc: "We maintain direct communication channels with global cryptocurrency platforms to identify and secure illicit assets."
               }
             ].map((service, i) => (
               <motion.div key={i} variants={fadeInUp}>
