@@ -1,18 +1,18 @@
-import { db } from "./db";
 import {
-  inquiries,
-  type InsertInquiry,
-  type Inquiry
+  submissions,
+  type InsertSubmission,
+  type Submission
 } from "@shared/schema";
+import { db } from "./db";
 
 export interface IStorage {
-  createInquiry(inquiry: InsertInquiry): Promise<Inquiry>;
+  createSubmission(submission: InsertSubmission): Promise<Submission>;
 }
 
 export class DatabaseStorage implements IStorage {
-  async createInquiry(insertInquiry: InsertInquiry): Promise<Inquiry> {
-    const [inquiry] = await db.insert(inquiries).values(insertInquiry).returning();
-    return inquiry;
+  async createSubmission(insertSubmission: InsertSubmission): Promise<Submission> {
+    const [submission] = await db.insert(submissions).values(insertSubmission).returning();
+    return submission;
   }
 }
 

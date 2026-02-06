@@ -1,26 +1,23 @@
 import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
-import { api } from "@shared/routes";
+import { insertSubmissionSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  app.post(api.inquiries.create.path, async (req, res) => {
+  app.post("/api/submissions", async (req, res) => {
     try {
-      const input = api.inquiries.create.input.parse(req.body);
-      const inquiry = await storage.createInquiry(input);
-      res.status(201).json(inquiry);
+      const data = insertSubmissionSchema.parse(req.body);
+      const submission = await storage.createSubmission(data);
+      res.status(201).json(submission);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.errors[0].message,
-          field: err.errors[0].path.join('.'),
-        });
+        return res.status(400).json({ message: err.errors[0].message });
       }
-      throw err;
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 
