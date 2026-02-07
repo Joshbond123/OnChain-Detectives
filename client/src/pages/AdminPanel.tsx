@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Card as UICard, CardContent as UICardContent, CardHeader as UICardHeader, CardTitle as UICardTitle } from "@/components/ui/card";
+import { Card as UICard, CardContent as UICardContent, CardHeader as UICardHeader, CardTitle as UICardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Submission, AdminSettings } from "@shared/schema";
-import { Lock, Phone, Database, LogOut } from "lucide-react";
+import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function AdminPanel() {
   const { toast } = useToast();
@@ -15,6 +18,7 @@ export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Expose a function to open the panel
   useEffect(() => {
@@ -67,25 +71,32 @@ export default function AdminPanel() {
   if (!isAuthenticated) {
     if (!showLoginModal) return null;
     return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm">
-        <UICard className="w-[400px] shadow-2xl border-primary/20">
-          <UICardHeader>
-            <UICardTitle>Admin Access</UICardTitle>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+        <UICard className="w-full max-w-md shadow-2xl border-primary/20">
+          <UICardHeader className="text-center">
+            <UICardTitle className="text-2xl font-bold">Admin Access</UICardTitle>
+            <CardDescription>Enter your credentials to access the dashboard</CardDescription>
           </UICardHeader>
           <UICardContent className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Enter admin password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && authMutation.mutate(password)}
-              autoFocus
-            />
-            <div className="flex gap-2">
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="password"
+                placeholder="Enter admin password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && authMutation.mutate(password)}
+                className="pl-10"
+                autoFocus
+                data-testid="input-admin-password"
+              />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
               <Button 
                 variant="ghost"
                 className="flex-1"
                 onClick={() => setShowLoginModal(false)}
+                data-testid="button-cancel-login"
               >
                 Cancel
               </Button>
@@ -93,8 +104,9 @@ export default function AdminPanel() {
                 className="flex-1" 
                 onClick={() => authMutation.mutate(password)}
                 disabled={authMutation.isPending}
+                data-testid="button-submit-login"
               >
-                Login
+                {authMutation.isPending ? "Logging in..." : "Login"}
               </Button>
             </div>
           </UICardContent>
@@ -103,105 +115,206 @@ export default function AdminPanel() {
     );
   }
 
-  return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <Button variant="outline" onClick={() => setIsAuthenticated(false)}>
-          <LogOut className="mr-2 h-4 w-4" /> Logout
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full py-6">
+      <div className="px-6 mb-8 flex items-center gap-2">
+        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+          <Database className="h-5 w-5 text-primary-foreground" />
+        </div>
+        <span className="font-bold text-xl tracking-tight">OnChain Admin</span>
+      </div>
+      
+      <div className="flex-1 px-4 space-y-1">
+        <Button variant="ghost" className="w-full justify-start gap-3 h-11 px-4" data-testid="link-dashboard">
+          <LayoutDashboard className="h-4 w-4" />
+          Dashboard
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <UICard>
-          <UICardHeader>
-            <UICardTitle className="flex items-center">
-              <Lock className="mr-2 h-5 w-5" /> Admin Password
-            </UICardTitle>
-          </UICardHeader>
-          <UICardContent className="space-y-4">
-            <div className="flex gap-2">
-              <Input
-                id="new-password"
-                type="password"
-                placeholder="New Password"
-                defaultValue={settings?.password}
-              />
-              <Button onClick={() => {
-                const val = (document.getElementById("new-password") as HTMLInputElement).value;
-                updateSettingsMutation.mutate({ password: val });
-              }}>Update</Button>
-            </div>
-          </UICardContent>
-        </UICard>
-
-        <UICard>
-          <UICardHeader>
-            <UICardTitle className="flex items-center">
-              <Phone className="mr-2 h-5 w-5" /> WhatsApp Configuration
-            </UICardTitle>
-          </UICardHeader>
-          <UICardContent className="space-y-4">
-            <div className="flex gap-2">
-              <Input
-                id="whatsapp-number"
-                placeholder="WhatsApp Number (e.g. 1234567890)"
-                defaultValue={settings?.whatsappNumber}
-              />
-              <Button onClick={() => {
-                const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
-                updateSettingsMutation.mutate({ whatsappNumber: val });
-              }}>Update</Button>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              This number will be used for user redirection after form submission.
-            </p>
-          </UICardContent>
-        </UICard>
+      <div className="px-4 mt-auto">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 h-11 px-4" 
+          onClick={() => setIsAuthenticated(false)}
+          data-testid="button-logout"
+        >
+          <LogOut className="h-4 w-4" />
+          Logout
+        </Button>
       </div>
+    </div>
+  );
 
-      <UICard>
-        <UICardHeader>
-          <UICardTitle className="flex items-center">
-            <Database className="mr-2 h-5 w-5" /> Form Submissions
-          </UICardTitle>
-        </UICardHeader>
-        <UICardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Platform</TableHead>
-                <TableHead>Lost Amount</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {submissions?.map((sub) => (
-                <TableRow key={sub.id}>
-                  <TableCell>{sub.createdAt ? new Date(sub.createdAt).toLocaleString() : "N/A"}</TableCell>
-                  <TableCell className="font-medium">{sub.name}</TableCell>
-                  <TableCell>{sub.email}</TableCell>
-                  <TableCell>{sub.platform}</TableCell>
-                  <TableCell>{sub.amountLost}</TableCell>
-                  <TableCell className="max-w-xs truncate" title={sub.description}>
-                    {sub.description}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {submissions?.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    No submissions found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </UICardContent>
-      </UICard>
+  return (
+    <div className="flex min-h-screen bg-slate-50 dark:bg-zinc-950">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-64 flex-col fixed inset-y-0 border-r bg-background">
+        <SidebarContent />
+      </aside>
+
+      <main className="flex-1 lg:pl-64">
+        {/* Top Header */}
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+          <div className="flex lg:hidden flex-1">
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-10 w-10">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-72">
+                <SidebarContent />
+              </SheetContent>
+            </Sheet>
+          </div>
+          
+          <div className="hidden lg:flex flex-1">
+            <h1 className="text-lg font-semibold">Admin Dashboard</h1>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="text-sm font-medium hidden sm:block text-muted-foreground">
+              Last login: {new Date().toLocaleDateString()}
+            </div>
+          </div>
+        </header>
+
+        <div className="p-4 sm:p-6 lg:p-8 space-y-8">
+          <Tabs defaultValue="submissions" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+              <TabsTrigger value="submissions" className="gap-2">
+                <Database className="h-4 w-4" /> Submissions
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-2">
+                <Settings className="h-4 w-4" /> Settings
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="submissions" className="mt-6">
+              <UICard className="border-none shadow-sm bg-background">
+                <UICardHeader className="px-6 py-4">
+                  <UICardTitle className="text-xl">Client Inquiries</UICardTitle>
+                  <CardDescription>View and manage all blockchain recovery requests</CardDescription>
+                </UICardHeader>
+                <UICardContent className="p-0 sm:p-6">
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[180px]">Date</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead className="hidden md:table-cell">Email</TableHead>
+                          <TableHead className="hidden sm:table-cell">Platform</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead className="hidden lg:table-cell">Description</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {submissions?.map((sub) => (
+                          <TableRow key={sub.id} className="group hover:bg-slate-50/50 dark:hover:bg-zinc-900/50">
+                            <TableCell className="text-sm text-muted-foreground">
+                              {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "N/A"}
+                            </TableCell>
+                            <TableCell className="font-medium">{sub.name}</TableCell>
+                            <TableCell className="hidden md:table-cell text-sm">{sub.email}</TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-primary/10 text-primary">
+                                {sub.platform || "Direct"}
+                              </span>
+                            </TableCell>
+                            <TableCell className="font-mono text-sm">{sub.amountLost || "—"}</TableCell>
+                            <TableCell className="hidden lg:table-cell max-w-[200px]">
+                              <p className="truncate text-sm text-muted-foreground" title={sub.description}>
+                                {sub.description}
+                              </p>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {(!submissions || submissions.length === 0) && (
+                          <TableRow>
+                            <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                              {loadingSubs ? "Loading submissions..." : "No recovery inquiries yet."}
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </UICardContent>
+              </UICard>
+            </TabsContent>
+
+            <TabsContent value="settings" className="mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <UICard className="shadow-sm border-none bg-background">
+                  <UICardHeader>
+                    <UICardTitle className="flex items-center gap-2 text-lg">
+                      <Lock className="h-5 w-5 text-primary" /> Security Settings
+                    </UICardTitle>
+                    <CardDescription>Update your administrative access password</CardDescription>
+                  </UICardHeader>
+                  <UICardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">New Admin Password</label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="new-password"
+                          type="password"
+                          placeholder="••••••••"
+                          defaultValue={settings?.password}
+                        />
+                        <Button 
+                          onClick={() => {
+                            const val = (document.getElementById("new-password") as HTMLInputElement).value;
+                            updateSettingsMutation.mutate({ password: val });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                    </div>
+                  </UICardContent>
+                </UICard>
+
+                <UICard className="shadow-sm border-none bg-background">
+                  <UICardHeader>
+                    <UICardTitle className="flex items-center gap-2 text-lg">
+                      <Phone className="h-5 w-5 text-green-500" /> WhatsApp Direct
+                    </UICardTitle>
+                    <CardDescription>Configure the contact number for instant chat</CardDescription>
+                  </UICardHeader>
+                  <UICardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">WhatsApp Number</label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="whatsapp-number"
+                          placeholder="e.g. 15551234567"
+                          defaultValue={settings?.whatsappNumber}
+                        />
+                        <Button 
+                          onClick={() => {
+                            const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
+                            updateSettingsMutation.mutate({ whatsappNumber: val });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg">
+                      Enter the full international format without plus or spaces (e.g. 15551234567).
+                    </p>
+                  </UICardContent>
+                </UICard>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
     </div>
   );
 }
+
