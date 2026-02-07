@@ -138,10 +138,10 @@ export default function CaseForm() {
               <Shield className="text-primary w-8 h-8" />
             </motion.div>
             <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-white">
-              Investigative Case Intake
+              Submit Your Case
             </h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Initiate a formal forensic analysis of your incident. Our investigative team will perform a preliminary blockchain audit and review your submission within 24 hours.
+              Tell us what happened so we can start investigating. We will review your case and get back to you within 24 hours.
             </p>
           </div>
 
@@ -153,7 +153,7 @@ export default function CaseForm() {
                     <CardHeader className="border-b border-white/5 bg-white/[0.02] py-4">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-primary" />
-                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Formal Identification</CardTitle>
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Your Information</CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent className="p-6">
@@ -163,7 +163,7 @@ export default function CaseForm() {
                           name="name"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-zinc-400">Legal Name</FormLabel>
+                              <FormLabel className="text-zinc-400">Full Name</FormLabel>
                               <FormControl>
                                 <Input placeholder="Enter your full name" className="bg-white/5 border-white/10" {...field} />
                               </FormControl>
@@ -176,7 +176,7 @@ export default function CaseForm() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-zinc-400">Communication Email</FormLabel>
+                              <FormLabel className="text-zinc-400">Email Address</FormLabel>
                               <FormControl>
                                 <Input type="email" placeholder="email@example.com" className="bg-white/5 border-white/10" {...field} />
                               </FormControl>
@@ -192,7 +192,7 @@ export default function CaseForm() {
                     <CardHeader className="border-b border-white/5 bg-white/[0.02] py-4">
                       <div className="flex items-center gap-2">
                         <Wallet className="h-4 w-4 text-primary" />
-                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Forensic Context</CardTitle>
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Scam Details</CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent className="p-6 space-y-6">
@@ -202,7 +202,7 @@ export default function CaseForm() {
                           name="amountLost"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-zinc-400">Estimated Loss Value</FormLabel>
+                              <FormLabel className="text-zinc-400">How much was lost?</FormLabel>
                               <FormControl>
                                 <Input placeholder="e.g. 1.25 ETH" className="bg-white/5 border-white/10" {...field} value={field.value || ""} />
                               </FormControl>
@@ -216,10 +216,10 @@ export default function CaseForm() {
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-zinc-400">Incident Narrative</FormLabel>
+                            <FormLabel className="text-zinc-400">What happened?</FormLabel>
                             <FormControl>
                               <Textarea 
-                                placeholder="Provide a chronological account of the event..." 
+                                placeholder="Please describe how the scam happened in your own words..." 
                                 className="min-h-[120px] bg-white/5 border-white/10 resize-none" 
                                 {...field} 
                               />
@@ -235,12 +235,12 @@ export default function CaseForm() {
                     <CardHeader className="border-b border-primary/10 bg-primary/5 py-4">
                       <div className="flex items-center gap-2">
                         <Database className="h-4 w-4 text-primary" />
-                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Evidence Acquisition</CardTitle>
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Proof and Evidence</CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent className="p-6 space-y-6">
                       <p className="text-sm text-zinc-400">
-                        Supply all relevant technical identifiers and visual documentation to support the investigative trace.
+                        To help us investigate, please provide the scammer's wallet address, upload screenshots of your evidence, or provide both.
                       </p>
                       
                       <FormField
@@ -248,11 +248,11 @@ export default function CaseForm() {
                         name="walletAddress"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-zinc-300">Target Wallet Address (Scammer)</FormLabel>
+                            <FormLabel className="text-zinc-300">Scammer's Wallet Address</FormLabel>
                             <FormControl>
                               <Input placeholder="0x..." className="bg-zinc-950 border-white/10 font-mono" {...field} value={field.value || ""} />
                             </FormControl>
-                            <FormDescription className="text-xs">The specific on-chain destination address of the illicit transfer.</FormDescription>
+                            <FormDescription className="text-xs">The wallet address where you sent the cryptocurrency.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -260,9 +260,9 @@ export default function CaseForm() {
 
                       <div className="space-y-4">
                         <div className="flex flex-col gap-1">
-                          <FormLabel className="text-zinc-300">Visual Evidence Documentation</FormLabel>
+                          <FormLabel className="text-zinc-300">Upload Evidence Screenshots</FormLabel>
                           <p className="text-xs text-muted-foreground italic">
-                            Required: Screenshots of the transaction hash (TxID), wallet history showing the outgoing transfer, and any relevant communication logs.
+                            Helpful evidence includes: transfer confirmations, payment proof, or chat conversations with the scammer.
                           </p>
                         </div>
                         <div 
@@ -273,8 +273,8 @@ export default function CaseForm() {
                             {isUploading ? <Loader2 className="h-5 w-5 animate-spin text-primary" /> : <Upload className="h-5 w-5 text-primary" />}
                           </div>
                           <div className="text-center">
-                            <p className="text-sm font-medium text-zinc-200">Upload multiple investigative assets</p>
-                            <p className="text-xs text-muted-foreground">Attach all relevant PNG, JPG or PDF captures</p>
+                            <p className="text-sm font-medium text-zinc-200">Click to upload images</p>
+                            <p className="text-xs text-muted-foreground">Select one or more screenshots (PNG or JPG)</p>
                           </div>
                           <input 
                             type="file" 
@@ -320,7 +320,7 @@ export default function CaseForm() {
                     ) : (
                       <CheckCircle2 className="mr-2 h-5 w-5" />
                     )}
-                    {mutation.isPending ? "Submitting Case..." : "Submit for Investigation"}
+                    {mutation.isPending ? "Submitting Case..." : "Submit Case"}
                   </Button>
                 </form>
               </Form>
