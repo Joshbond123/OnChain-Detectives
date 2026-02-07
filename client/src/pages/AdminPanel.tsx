@@ -137,7 +137,11 @@ export default function AdminPanel() {
         <Button 
           variant="ghost" 
           className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 h-11 px-4" 
-          onClick={() => setIsAuthenticated(false)}
+          onClick={() => {
+            setIsAuthenticated(false);
+            setShowLoginModal(false);
+            setPassword("");
+          }}
           data-testid="button-logout"
         >
           <LogOut className="h-4 w-4" />
@@ -262,24 +266,25 @@ export default function AdminPanel() {
                   <UICardContent className="space-y-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">New Admin Password</label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="new-password"
-                          type="password"
-                          placeholder="••••••••"
-                          defaultValue={settings?.password}
-                          className="bg-muted/30"
-                        />
-                        <Button 
-                          onClick={() => {
-                            const val = (document.getElementById("new-password") as HTMLInputElement).value;
-                            updateSettingsMutation.mutate({ password: val });
-                          }}
-                          disabled={updateSettingsMutation.isPending}
-                        >
-                          Save
-                        </Button>
-                      </div>
+                          <div className="flex gap-2">
+                            <Input
+                              id="new-password"
+                              type="text"
+                              placeholder="New password"
+                              defaultValue={settings?.password}
+                              className="bg-muted/30 text-white"
+                            />
+                            <Button 
+                              onClick={() => {
+                                const val = (document.getElementById("new-password") as HTMLInputElement).value;
+                                if (!val) return toast({ title: "Error", description: "Password cannot be empty", variant: "destructive" });
+                                updateSettingsMutation.mutate({ password: val });
+                              }}
+                              disabled={updateSettingsMutation.isPending}
+                            >
+                              Save
+                            </Button>
+                          </div>
                     </div>
                   </UICardContent>
                 </UICard>
@@ -294,23 +299,23 @@ export default function AdminPanel() {
                   <UICardContent className="space-y-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">WhatsApp Number</label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="whatsapp-number"
-                          placeholder="e.g. 15551234567"
-                          defaultValue={settings?.whatsappNumber}
-                          className="bg-muted/30"
-                        />
-                        <Button 
-                          onClick={() => {
-                            const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
-                            updateSettingsMutation.mutate({ whatsappNumber: val });
-                          }}
-                          disabled={updateSettingsMutation.isPending}
-                        >
-                          Save
-                        </Button>
-                      </div>
+                          <div className="flex gap-2">
+                            <Input
+                              id="whatsapp-number"
+                              placeholder="e.g. 15551234567"
+                              defaultValue={settings?.whatsappNumber}
+                              className="bg-muted/30 text-white"
+                            />
+                            <Button 
+                              onClick={() => {
+                                const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
+                                updateSettingsMutation.mutate({ whatsappNumber: val });
+                              }}
+                              disabled={updateSettingsMutation.isPending}
+                            >
+                              Save
+                            </Button>
+                          </div>
                     </div>
                     <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg border border-white/5">
                       Enter the full international format without plus or spaces (e.g. 15551234567).
