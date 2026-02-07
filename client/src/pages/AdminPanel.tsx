@@ -160,7 +160,7 @@ export default function AdminPanel() {
           <div className="flex lg:hidden flex-1">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-10 w-10">
+                <Button variant="ghost" size="icon" className="h-10 w-10 text-white">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
