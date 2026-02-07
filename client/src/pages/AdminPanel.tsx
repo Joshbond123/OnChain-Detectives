@@ -127,7 +127,15 @@ export default function AdminPanel() {
       </div>
       
       <div className="flex-1 px-4 space-y-1">
-        <Button variant="ghost" className="w-full justify-start gap-3 h-11 px-4 text-zinc-400 hover:text-white hover:bg-white/5" data-testid="link-dashboard">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3 h-11 px-4 text-zinc-400 hover:text-white hover:bg-white/5" 
+          onClick={() => {
+             const tabsTrigger = document.querySelector('[data-testid="tabs-trigger-submissions"]') as HTMLElement;
+             if (tabsTrigger) tabsTrigger.click();
+          }}
+          data-testid="link-dashboard"
+        >
           <LayoutDashboard className="h-4 w-4" />
           Dashboard
         </Button>
@@ -188,10 +196,10 @@ export default function AdminPanel() {
         <div className="p-4 sm:p-6 lg:p-8 space-y-8">
           <Tabs defaultValue="submissions" className="w-full">
             <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-              <TabsTrigger value="submissions" className="gap-2">
+              <TabsTrigger value="submissions" className="gap-2" data-testid="tabs-trigger-submissions">
                 <Database className="h-4 w-4" /> Submissions
               </TabsTrigger>
-              <TabsTrigger value="settings" className="gap-2">
+              <TabsTrigger value="settings" className="gap-2" data-testid="tabs-trigger-settings">
                 <Settings className="h-4 w-4" /> Settings
               </TabsTrigger>
             </TabsList>
@@ -216,7 +224,11 @@ export default function AdminPanel() {
                       </TableHeader>
                       <TableBody>
                         {submissions?.map((sub) => (
-                          <TableRow key={sub.id} className="group hover:bg-slate-50/50 dark:hover:bg-zinc-900/50">
+                          <TableRow 
+                            key={sub.id} 
+                            className="group hover:bg-slate-50/50 dark:hover:bg-zinc-900/50 cursor-pointer"
+                            onClick={() => setSelectedSubmission(sub)}
+                          >
                             <TableCell className="text-sm text-muted-foreground font-mono">
                               {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "N/A"}
                             </TableCell>
@@ -232,7 +244,10 @@ export default function AdminPanel() {
                                 variant="ghost" 
                                 size="sm" 
                                 className="h-8 w-8 p-0"
-                                onClick={() => setSelectedSubmission(sub)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedSubmission(sub);
+                                }}
                               >
                                 <Eye className="h-4 w-4" />
                                 <span className="sr-only">View Details</span>
@@ -274,16 +289,20 @@ export default function AdminPanel() {
                               defaultValue={settings?.password}
                               className="bg-muted/30 text-white"
                             />
-                            <Button 
-                              onClick={() => {
-                                const val = (document.getElementById("new-password") as HTMLInputElement).value;
-                                if (!val) return toast({ title: "Error", description: "Password cannot be empty", variant: "destructive" });
-                                updateSettingsMutation.mutate({ password: val });
-                              }}
-                              disabled={updateSettingsMutation.isPending}
-                            >
-                              Save
-                            </Button>
+                        <Button 
+                          onClick={() => {
+                            const val = (document.getElementById("new-password") as HTMLInputElement).value;
+                            if (!val) {
+                              toast({ title: "Error", description: "Password cannot be empty", variant: "destructive" });
+                              return;
+                            }
+                            updateSettingsMutation.mutate({ password: val });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                          data-testid="button-save-password"
+                        >
+                          Save
+                        </Button>
                           </div>
                     </div>
                   </UICardContent>
@@ -306,15 +325,16 @@ export default function AdminPanel() {
                               defaultValue={settings?.whatsappNumber}
                               className="bg-muted/30 text-white"
                             />
-                            <Button 
-                              onClick={() => {
-                                const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
-                                updateSettingsMutation.mutate({ whatsappNumber: val });
-                              }}
-                              disabled={updateSettingsMutation.isPending}
-                            >
-                              Save
-                            </Button>
+                        <Button 
+                          onClick={() => {
+                            const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
+                            updateSettingsMutation.mutate({ whatsappNumber: val });
+                          }}
+                          disabled={updateSettingsMutation.isPending}
+                          data-testid="button-save-whatsapp"
+                        >
+                          Save
+                        </Button>
                           </div>
                     </div>
                     <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg border border-white/5">
