@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { insertSubmissionSchema, type InsertSubmission, type AdminSettings } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -16,13 +17,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Shield, ArrowRight, Loader2, Upload, Wallet, FileText, CheckCircle2, Trash2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Shield, CheckCircle2, Loader2, Upload, Wallet, Database, User, Lock, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { Progress } from "@/components/ui/progress";
 
 export default function CaseForm() {
   const { toast } = useToast();
@@ -380,8 +380,6 @@ export default function CaseForm() {
       <Footer />
       <WhatsAppButton />
     </div>
-  );
-}
   );
 }
 
