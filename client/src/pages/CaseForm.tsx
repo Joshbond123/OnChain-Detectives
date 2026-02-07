@@ -38,7 +38,6 @@ export default function CaseForm() {
       walletAddress: "",
       description: "",
       amountLost: "",
-      platform: "",
       evidenceFiles: [],
     },
   });
