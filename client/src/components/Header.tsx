@@ -78,7 +78,7 @@ export function Header() {
             ))}
             <div className="h-8 w-[1px] bg-white/10 mx-2" />
             <Button 
-              onClick={() => setLocation("/contact")}
+              onClick={() => setLocation("/case-form")}
               data-testid="button-nav-recovery"
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold font-display uppercase tracking-widest px-6 py-5 rounded-xl transition-all duration-500 shadow-lg shadow-primary/20 hover:shadow-primary/40"
             >
@@ -116,7 +116,7 @@ export function Header() {
                 </button>
               ))}
               <Button 
-                onClick={() => setLocation("/contact")}
+                onClick={() => setLocation("/case-form")}
                 className="w-full h-16 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg rounded-2xl shadow-2xl shadow-primary/20"
               >
                 Start Your Case
