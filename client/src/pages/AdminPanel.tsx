@@ -259,7 +259,7 @@ export default function AdminPanel() {
                         <TableRow 
                           key={sub.id} 
                           className="border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
-                          onClick={() => setLocation(`/admin/submission/${sub.id}`)}
+                          onClick={() => window.location.href = `/admin/submission/${sub.id}`}
                         >
                           <TableCell className="text-zinc-500 font-mono text-xs">
                             {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "N/A"}
@@ -272,7 +272,11 @@ export default function AdminPanel() {
                                 variant="secondary" 
                                 size="sm" 
                                 className="h-8 gap-2 bg-zinc-800 hover:bg-zinc-700 text-white border-white/5"
-                                onClick={() => setLocation(`/admin/submission/${sub.id}`)}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  window.location.href = `/admin/submission/${sub.id}`;
+                                }}
                                 data-testid={`button-open-${sub.id}`}
                               >
                                 <FolderOpen className="h-4 w-4" /> Open
