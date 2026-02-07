@@ -76,7 +76,7 @@ export default function AdminPanel() {
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
         <UICard className="w-full max-w-md shadow-2xl border-primary/20">
           <UICardHeader className="text-center">
-            <UICardTitle className="text-2xl font-bold">Admin Access</UICardTitle>
+            <UICardTitle className="text-2xl font-bold text-white">Admin Access</UICardTitle>
             <CardDescription>Enter your credentials to access the dashboard</CardDescription>
           </UICardHeader>
           <UICardContent className="space-y-4">
@@ -88,7 +88,7 @@ export default function AdminPanel() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && authMutation.mutate(password)}
-                className="pl-10"
+                className="pl-10 text-white"
                 autoFocus
                 data-testid="input-admin-password"
               />
@@ -96,7 +96,7 @@ export default function AdminPanel() {
             <div className="flex flex-col sm:flex-row gap-2">
               <Button 
                 variant="ghost"
-                className="flex-1"
+                className="flex-1 text-white hover:bg-white/10"
                 onClick={() => setShowLoginModal(false)}
                 data-testid="button-cancel-login"
               >
@@ -123,11 +123,11 @@ export default function AdminPanel() {
         <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
           <Database className="h-5 w-5 text-primary-foreground" />
         </div>
-        <span className="font-bold text-xl tracking-tight">OnChain Admin</span>
+        <span className="font-bold text-xl tracking-tight text-white">OnChain Admin</span>
       </div>
       
       <div className="flex-1 px-4 space-y-1">
-        <Button variant="ghost" className="w-full justify-start gap-3 h-11 px-4" data-testid="link-dashboard">
+        <Button variant="ghost" className="w-full justify-start gap-3 h-11 px-4 text-zinc-400 hover:text-white hover:bg-white/5" data-testid="link-dashboard">
           <LayoutDashboard className="h-4 w-4" />
           Dashboard
         </Button>
@@ -148,13 +148,13 @@ export default function AdminPanel() {
   );
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-zinc-950">
+    <div className="fixed inset-0 z-[100] flex min-h-screen bg-slate-50 dark:bg-zinc-950">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex w-64 flex-col fixed inset-y-0 border-r bg-background">
         <SidebarContent />
       </aside>
 
-      <main className="flex-1 lg:pl-64">
+      <main className="flex-1 lg:pl-64 overflow-y-auto">
         {/* Top Header */}
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur sm:px-6 lg:px-8">
           <div className="flex lg:hidden flex-1">
@@ -164,14 +164,14 @@ export default function AdminPanel() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-72">
+              <SheetContent side="left" className="p-0 w-72 bg-zinc-950 border-white/10">
                 <SidebarContent />
               </SheetContent>
             </Sheet>
           </div>
           
           <div className="hidden lg:flex flex-1">
-            <h1 className="text-lg font-semibold">Admin Dashboard</h1>
+            <h1 className="text-lg font-semibold text-white">Admin Dashboard</h1>
           </div>
 
           <div className="flex items-center gap-4">
