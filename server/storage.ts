@@ -41,6 +41,8 @@ export class FileStorage implements IStorage {
       createdAt: new Date(),
       amountLost: insertSubmission.amountLost ?? null,
       platform: insertSubmission.platform ?? null,
+      walletAddress: insertSubmission.walletAddress ?? null,
+      evidenceFiles: insertSubmission.evidenceFiles ?? [],
     };
     data.push(newSubmission);
     await this.writeJson(this.submissionsPath, data);

@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Submission, AdminSettings } from "@shared/schema";
-import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X } from "lucide-react";
+import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X, Eye, Calendar, User, Mail, Landmark, Wallet, ExternalLink } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function AdminPanel() {
   const { toast } = useToast();
@@ -19,6 +20,7 @@ export default function AdminPanel() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
 
   // Expose a function to open the panel
   useEffect(() => {
@@ -174,7 +176,7 @@ export default function AdminPanel() {
 
           <div className="flex items-center gap-4">
             <div className="text-sm font-medium hidden sm:block text-muted-foreground">
-              Last login: {new Date().toLocaleDateString()}
+              {submissions?.length || 0} Total Submissions
             </div>
           </div>
         </header>
@@ -204,35 +206,39 @@ export default function AdminPanel() {
                           <TableHead className="w-[180px]">Date</TableHead>
                           <TableHead>Name</TableHead>
                           <TableHead className="hidden md:table-cell">Email</TableHead>
-                          <TableHead className="hidden sm:table-cell">Platform</TableHead>
-                          <TableHead>Amount</TableHead>
-                          <TableHead className="hidden lg:table-cell">Description</TableHead>
+                          <TableHead className="hidden sm:table-cell text-center">Platform</TableHead>
+                          <TableHead className="text-right">Action</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {submissions?.map((sub) => (
                           <TableRow key={sub.id} className="group hover:bg-slate-50/50 dark:hover:bg-zinc-900/50">
-                            <TableCell className="text-sm text-muted-foreground">
+                            <TableCell className="text-sm text-muted-foreground font-mono">
                               {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "N/A"}
                             </TableCell>
-                            <TableCell className="font-medium">{sub.name}</TableCell>
+                            <TableCell className="font-semibold text-primary">{sub.name}</TableCell>
                             <TableCell className="hidden md:table-cell text-sm">{sub.email}</TableCell>
-                            <TableCell className="hidden sm:table-cell">
-                              <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-primary/10 text-primary">
+                            <TableCell className="hidden sm:table-cell text-center">
+                              <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-tighter">
                                 {sub.platform || "Direct"}
                               </span>
                             </TableCell>
-                            <TableCell className="font-mono text-sm">{sub.amountLost || "—"}</TableCell>
-                            <TableCell className="hidden lg:table-cell max-w-[200px]">
-                              <p className="truncate text-sm text-muted-foreground" title={sub.description}>
-                                {sub.description}
-                              </p>
+                            <TableCell className="text-right">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-8 w-8 p-0"
+                                onClick={() => setSelectedSubmission(sub)}
+                              >
+                                <Eye className="h-4 w-4" />
+                                <span className="sr-only">View Details</span>
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
                         {(!submissions || submissions.length === 0) && (
                           <TableRow>
-                            <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                            <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
                               {loadingSubs ? "Loading submissions..." : "No recovery inquiries yet."}
                             </TableCell>
                           </TableRow>
@@ -255,13 +261,14 @@ export default function AdminPanel() {
                   </UICardHeader>
                   <UICardContent className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">New Admin Password</label>
+                      <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">New Admin Password</label>
                       <div className="flex gap-2">
                         <Input
                           id="new-password"
                           type="password"
                           placeholder="••••••••"
                           defaultValue={settings?.password}
+                          className="bg-muted/30"
                         />
                         <Button 
                           onClick={() => {
@@ -286,12 +293,13 @@ export default function AdminPanel() {
                   </UICardHeader>
                   <UICardContent className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">WhatsApp Number</label>
+                      <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">WhatsApp Number</label>
                       <div className="flex gap-2">
                         <Input
                           id="whatsapp-number"
                           placeholder="e.g. 15551234567"
                           defaultValue={settings?.whatsappNumber}
+                          className="bg-muted/30"
                         />
                         <Button 
                           onClick={() => {
@@ -304,7 +312,7 @@ export default function AdminPanel() {
                         </Button>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg">
+                    <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg border border-white/5">
                       Enter the full international format without plus or spaces (e.g. 15551234567).
                     </p>
                   </UICardContent>
@@ -314,7 +322,92 @@ export default function AdminPanel() {
           </Tabs>
         </div>
       </main>
+
+      {/* Submission Detail Modal */}
+      <Dialog open={!!selectedSubmission} onOpenChange={(open) => !open && setSelectedSubmission(null)}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-background border-primary/20">
+          <ScrollArea className="max-h-[90vh]">
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-start border-b border-white/10 pb-6">
+                <div className="space-y-1">
+                  <h2 className="text-3xl font-bold font-display">{selectedSubmission?.name}</h2>
+                  <div className="flex items-center gap-4 text-muted-foreground text-sm">
+                    <div className="flex items-center gap-1">
+                      <Mail className="h-4 w-4" /> {selectedSubmission?.email}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-4 w-4" /> {selectedSubmission?.createdAt ? new Date(selectedSubmission.createdAt).toLocaleString() : "N/A"}
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-primary/10 text-primary px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest border border-primary/20">
+                  Case ID: #{selectedSubmission?.id}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-muted/30 p-4 rounded-xl space-y-2 border border-white/5">
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Landmark className="h-3 w-3" /> Platform
+                  </div>
+                  <div className="font-semibold text-lg">{selectedSubmission?.platform || "—"}</div>
+                </div>
+                <div className="bg-muted/30 p-4 rounded-xl space-y-2 border border-white/5">
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Landmark className="h-3 w-3" /> Amount Lost
+                  </div>
+                  <div className="font-semibold text-lg text-destructive">{selectedSubmission?.amountLost || "—"}</div>
+                </div>
+                <div className="bg-muted/30 p-4 rounded-xl space-y-2 border border-white/5">
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Wallet className="h-3 w-3" /> Scammer Wallet
+                  </div>
+                  <div className="font-mono text-sm truncate" title={selectedSubmission?.walletAddress || ""}>
+                    {selectedSubmission?.walletAddress || "Not provided"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                   Case Description
+                </h3>
+                <div className="bg-zinc-900/50 p-6 rounded-2xl border border-white/10 leading-relaxed text-zinc-300">
+                  {selectedSubmission?.description}
+                </div>
+              </div>
+
+              {selectedSubmission?.evidenceFiles && selectedSubmission.evidenceFiles.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold flex items-center gap-2">
+                    Evidence Gallery ({selectedSubmission.evidenceFiles.length})
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {selectedSubmission.evidenceFiles.map((url, idx) => (
+                      <div key={idx} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
+                        <img src={url} alt="Evidence" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button variant="ghost" size="icon" className="h-10 w-10 text-white" onClick={() => window.open(url, '_blank')}>
+                            <ExternalLink className="h-6 w-6" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-6 border-t border-white/10 flex justify-end">
+                <Button onClick={() => setSelectedSubmission(null)} variant="outline" className="px-8">
+                  Close Review
+                </Button>
+              </div>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
 
