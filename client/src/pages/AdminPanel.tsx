@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Submission, AdminSettings } from "@shared/schema";
-import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X, Eye, Calendar, User, Mail, Landmark, Wallet, ExternalLink } from "lucide-react";
+import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X, Eye, Calendar, User, Mail, Landmark, Wallet, ExternalLink, Trash2, FolderOpen } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useLocation } from "wouter";
 
 export default function AdminPanel() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -67,6 +69,19 @@ export default function AdminPanel() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/settings"] });
       toast({ title: "Success", description: "Settings updated successfully" });
+    },
+  });
+
+  const deleteSubmissionMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest("DELETE", `/api/admin/submissions/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/submissions"] });
+      toast({ title: "Success", description: "Submission deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to delete submission", variant: "destructive" });
     },
   });
 
@@ -244,7 +259,7 @@ export default function AdminPanel() {
                         <TableRow 
                           key={sub.id} 
                           className="border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
-                          onClick={() => setSelectedSubmission(sub)}
+                          onClick={() => setLocation(`/admin/submission/${sub.id}`)}
                         >
                           <TableCell className="text-zinc-500 font-mono text-xs">
                             {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "N/A"}
@@ -252,15 +267,31 @@ export default function AdminPanel() {
                           <TableCell className="font-medium text-white">{sub.name}</TableCell>
                           <TableCell className="text-zinc-400">{sub.email}</TableCell>
                           <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                            <Button 
-                              variant="secondary" 
-                              size="sm" 
-                              className="h-8 gap-2"
-                              onClick={() => setSelectedSubmission(sub)}
-                              data-testid={`button-details-${sub.id}`}
-                            >
-                              <Eye className="h-4 w-4" /> Details
-                            </Button>
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                variant="secondary" 
+                                size="sm" 
+                                className="h-8 gap-2 bg-zinc-800 hover:bg-zinc-700 text-white border-white/5"
+                                onClick={() => setLocation(`/admin/submission/${sub.id}`)}
+                                data-testid={`button-open-${sub.id}`}
+                              >
+                                <FolderOpen className="h-4 w-4" /> Open
+                              </Button>
+                              <Button 
+                                variant="destructive" 
+                                size="sm" 
+                                className="h-8 gap-2"
+                                onClick={() => {
+                                  if (confirm("Are you sure you want to permanently delete this submission?")) {
+                                    deleteSubmissionMutation.mutate(sub.id);
+                                  }
+                                }}
+                                disabled={deleteSubmissionMutation.isPending}
+                                data-testid={`button-delete-${sub.id}`}
+                              >
+                                <Trash2 className="h-4 w-4" /> Delete
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -350,65 +381,6 @@ export default function AdminPanel() {
           )}
         </div>
       </main>
-
-      {/* Detailed Submission View */}
-      <Dialog open={!!selectedSubmission} onOpenChange={(open) => !open && setSelectedSubmission(null)}>
-        <DialogContent className="max-w-2xl bg-zinc-900 border-white/10 text-white">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{selectedSubmission?.name}</DialogTitle>
-            <DialogDescription className="text-zinc-400">Submission Details</DialogDescription>
-          </DialogHeader>
-          
-          <ScrollArea className="max-h-[70vh] pr-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-              <DetailItem label="Email" value={selectedSubmission?.email} icon={<Mail className="h-4 w-4" />} />
-              <DetailItem label="Platform" value={selectedSubmission?.platform} icon={<LayoutDashboard className="h-4 w-4" />} />
-              <DetailItem label="Amount Lost" value={selectedSubmission?.amountLost} icon={<Landmark className="h-4 w-4" />} />
-              <DetailItem label="Wallet" value={selectedSubmission?.walletAddress} icon={<Wallet className="h-4 w-4" />} />
-              <div className="col-span-full border-t border-white/10 pt-4 mt-2">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2 block">Description of Case</label>
-                <p className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-950 p-4 rounded-lg border border-white/5">
-                  {selectedSubmission?.description}
-                </p>
-              </div>
-              
-              {selectedSubmission?.evidenceFiles && selectedSubmission.evidenceFiles.length > 0 && (
-                <div className="col-span-full space-y-3">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold block">Attached Evidence</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {selectedSubmission.evidenceFiles.map((file, i) => (
-                      <a 
-                        key={i} 
-                        href={file} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800 border border-white/5 hover:bg-zinc-700 transition-colors"
-                      >
-                        <ExternalLink className="h-4 w-4 text-primary" />
-                        <span className="text-xs truncate">View Document {i + 1}</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
-
-function DetailItem({ label, value, icon }: { label: string; value?: string | null; icon: React.ReactNode }) {
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center gap-2 text-zinc-500">
-        {icon}
-        <span className="text-[10px] uppercase tracking-widest font-bold">{label}</span>
-      </div>
-      <p className="text-sm font-medium text-white bg-zinc-800/50 p-2.5 rounded-md border border-white/5 truncate">
-        {value || "Not provided"}
-      </p>
     </div>
   );
 }

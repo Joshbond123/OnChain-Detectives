@@ -7,12 +7,14 @@ import NotFound from "@/pages/not-found";
 import Home from "./pages/Home";
 import CaseForm from "./pages/CaseForm";
 import AdminPanel from "./pages/AdminPanel";
+import SubmissionDetails from "./pages/SubmissionDetails";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/case-form" component={CaseForm} />
+      <Route path="/admin/submission/:id" component={SubmissionDetails} />
       <Route component={NotFound} />
     </Switch>
   );

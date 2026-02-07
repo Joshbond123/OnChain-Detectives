@@ -26,6 +26,16 @@ export async function registerRoutes(
     res.json(subs);
   });
 
+  app.delete("/api/admin/submissions/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteSubmission(id);
+      res.json({ success: true });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to delete submission" });
+    }
+  });
+
   app.get("/api/admin/settings", async (req, res) => {
     const settings = await storage.getAdminSettings();
     res.json(settings);

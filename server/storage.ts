@@ -12,6 +12,7 @@ import path from "path";
 export interface IStorage {
   createSubmission(submission: InsertSubmission): Promise<Submission>;
   getSubmissions(): Promise<Submission[]>;
+  deleteSubmission(id: number): Promise<void>;
   getAdminSettings(): Promise<AdminSettings>;
   updateAdminSettings(settings: Partial<InsertAdminSettings>): Promise<AdminSettings>;
 }
@@ -53,6 +54,12 @@ export class FileStorage implements IStorage {
 
   async getSubmissions(): Promise<Submission[]> {
     return await this.readJson<Submission[]>(this.submissionsPath, []);
+  }
+
+  async deleteSubmission(id: number): Promise<void> {
+    const data = await this.readJson<Submission[]>(this.submissionsPath, []);
+    const filtered = data.filter(sub => sub.id !== id);
+    await this.writeJson(this.submissionsPath, filtered);
   }
 
   async getAdminSettings(): Promise<AdminSettings> {
