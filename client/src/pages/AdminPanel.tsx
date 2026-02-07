@@ -120,41 +120,68 @@ export default function AdminPanel() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full py-6">
       <div className="px-6 mb-8 flex items-center gap-2">
-        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-          <Database className="h-5 w-5 text-primary-foreground" />
+        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20">
+          <Database className="h-6 w-6 text-primary-foreground" />
         </div>
-        <span className="font-bold text-xl tracking-tight text-white">OnChain Admin</span>
+        <div className="flex flex-col">
+          <span className="font-bold text-xl tracking-tight text-white leading-none">OnChain</span>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Forensics Admin</span>
+        </div>
       </div>
       
-      <div className="flex-1 px-4 space-y-1">
+      <div className="flex-1 px-4 space-y-1.5">
         <Button 
           variant="ghost" 
-          className="w-full justify-start gap-3 h-11 px-4 text-zinc-400 hover:text-white hover:bg-white/5" 
+          className="w-full justify-start gap-3 h-12 px-4 text-zinc-400 hover:text-white hover:bg-white/5 group transition-all duration-200" 
           onClick={() => {
              const tabsTrigger = document.querySelector('[data-testid="tabs-trigger-submissions"]') as HTMLElement;
              if (tabsTrigger) tabsTrigger.click();
           }}
           data-testid="link-dashboard"
         >
-          <LayoutDashboard className="h-4 w-4" />
-          Dashboard
+          <LayoutDashboard className="h-5 w-5 group-hover:text-primary transition-colors" />
+          <span className="font-medium">Inquiries</span>
+        </Button>
+
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3 h-12 px-4 text-zinc-400 hover:text-white hover:bg-white/5 group transition-all duration-200" 
+          onClick={() => {
+             const tabsTrigger = document.querySelector('[data-testid="tabs-trigger-settings"]') as HTMLElement;
+             if (tabsTrigger) tabsTrigger.click();
+          }}
+          data-testid="link-settings"
+        >
+          <Settings className="h-5 w-5 group-hover:text-primary transition-colors" />
+          <span className="font-medium">System Settings</span>
         </Button>
       </div>
 
       <div className="px-4 mt-auto">
-        <Button 
-          variant="ghost" 
-          className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 h-11 px-4" 
-          onClick={() => {
-            setIsAuthenticated(false);
-            setShowLoginModal(false);
-            setPassword("");
-          }}
-          data-testid="button-logout"
-        >
-          <LogOut className="h-4 w-4" />
-          Logout
-        </Button>
+        <div className="p-4 rounded-xl bg-zinc-900/50 border border-white/5 mb-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-8 w-8 rounded-full bg-zinc-800 flex items-center justify-center">
+              <User className="h-4 w-4 text-zinc-400" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium text-white">Administrator</span>
+              <span className="text-[10px] text-zinc-500">Root Access</span>
+            </div>
+          </div>
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start gap-3 text-destructive hover:text-white hover:bg-destructive h-10 px-3 rounded-lg transition-all duration-200" 
+            onClick={() => {
+              setIsAuthenticated(false);
+              setShowLoginModal(false);
+              setPassword("");
+            }}
+            data-testid="button-logout"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="text-sm font-medium">Log out</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -194,6 +221,50 @@ export default function AdminPanel() {
         </header>
 
         <div className="p-4 sm:p-6 lg:p-8 space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <UICard className="bg-zinc-900/40 border-white/5 shadow-2xl backdrop-blur-md">
+              <UICardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <Mail className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-zinc-500 uppercase tracking-wider">Total Leads</p>
+                    <h3 className="text-2xl font-bold text-white">{submissions?.length || 0}</h3>
+                  </div>
+                </div>
+              </UICardContent>
+            </UICard>
+
+            <UICard className="bg-zinc-900/40 border-white/5 shadow-2xl backdrop-blur-md">
+              <UICardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-green-500/10 flex items-center justify-center border border-green-500/20">
+                    <Phone className="h-6 w-6 text-green-500" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-zinc-500 uppercase tracking-wider">Live Chat</p>
+                    <h3 className="text-2xl font-bold text-white">{settings?.whatsappNumber ? "Active" : "Not Set"}</h3>
+                  </div>
+                </div>
+              </UICardContent>
+            </UICard>
+
+            <UICard className="bg-zinc-900/40 border-white/5 shadow-2xl backdrop-blur-md">
+              <UICardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                    <Database className="h-6 w-6 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-zinc-500 uppercase tracking-wider">System Status</p>
+                    <h3 className="text-2xl font-bold text-white">Online</h3>
+                  </div>
+                </div>
+              </UICardContent>
+            </UICard>
+          </div>
+
           <Tabs defaultValue="submissions" className="w-full">
             <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
               <TabsTrigger value="submissions" className="gap-2" data-testid="tabs-trigger-submissions">
@@ -204,54 +275,60 @@ export default function AdminPanel() {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="submissions" className="mt-6">
-              <UICard className="border-none shadow-sm bg-background">
-                <UICardHeader className="px-6 py-4">
-                  <UICardTitle className="text-xl">Client Inquiries</UICardTitle>
-                  <CardDescription>View and manage all blockchain recovery requests</CardDescription>
+            <TabsContent value="submissions" className="mt-6 animate-in fade-in duration-500">
+              <UICard className="border-white/5 shadow-2xl bg-zinc-900/40 backdrop-blur-md overflow-hidden">
+                <UICardHeader className="px-6 py-6 border-b border-white/5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <UICardTitle className="text-2xl font-bold text-white">Client Inquiries</UICardTitle>
+                      <CardDescription className="text-zinc-400">Real-time overview of recovery requests</CardDescription>
+                    </div>
+                  </div>
                 </UICardHeader>
-                <UICardContent className="p-0 sm:p-6">
+                <UICardContent className="p-0">
                   <div className="overflow-x-auto">
                     <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[180px]">Date</TableHead>
-                          <TableHead>Name</TableHead>
-                          <TableHead className="hidden md:table-cell">Email</TableHead>
-                          <TableHead className="hidden sm:table-cell text-center">Platform</TableHead>
-                          <TableHead className="text-right">Action</TableHead>
+                      <TableHeader className="bg-zinc-950/50">
+                        <TableRow className="border-white/5 hover:bg-transparent">
+                          <TableHead className="w-[180px] text-zinc-400 font-bold uppercase text-[10px] tracking-widest">Received Date</TableHead>
+                          <TableHead className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest">Client Name</TableHead>
+                          <TableHead className="hidden md:table-cell text-zinc-400 font-bold uppercase text-[10px] tracking-widest">Email Contact</TableHead>
+                          <TableHead className="hidden sm:table-cell text-center text-zinc-400 font-bold uppercase text-[10px] tracking-widest">Status</TableHead>
+                          <TableHead className="text-right text-zinc-400 font-bold uppercase text-[10px] tracking-widest px-6">Action</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {submissions?.map((sub) => (
                           <TableRow 
                             key={sub.id} 
-                            className="group hover:bg-slate-50/50 dark:hover:bg-zinc-900/50 cursor-pointer"
+                            className="group border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
                             onClick={() => setSelectedSubmission(sub)}
                           >
-                            <TableCell className="text-sm text-muted-foreground font-mono">
+                            <TableCell className="text-sm text-zinc-500 font-mono">
                               {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "N/A"}
                             </TableCell>
-                            <TableCell className="font-semibold text-primary">{sub.name}</TableCell>
-                            <TableCell className="hidden md:table-cell text-sm">{sub.email}</TableCell>
+                            <TableCell className="font-semibold text-white group-hover:text-primary transition-colors">{sub.name}</TableCell>
+                            <TableCell className="hidden md:table-cell text-sm text-zinc-400">{sub.email}</TableCell>
                             <TableCell className="hidden sm:table-cell text-center">
-                              <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-tighter">
-                                {sub.platform || "Direct"}
+                              <span className="inline-flex items-center rounded-lg px-2.5 py-1 text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-tighter">
+                                NEW INQUIRY
                               </span>
                             </TableCell>
-                            <TableCell className="text-right">
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-8 w-8 p-0"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedSubmission(sub);
-                                }}
-                              >
-                                <Eye className="h-4 w-4" />
-                                <span className="sr-only">View Details</span>
-                              </Button>
+                            <TableCell className="text-right px-6">
+                              <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Button 
+                                  variant="secondary" 
+                                  size="sm" 
+                                  className="h-8 gap-2 bg-zinc-800 hover:bg-primary hover:text-white transition-all"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedSubmission(sub);
+                                  }}
+                                >
+                                  <Eye className="h-4 w-4" />
+                                  Review
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -269,77 +346,92 @@ export default function AdminPanel() {
               </UICard>
             </TabsContent>
 
-            <TabsContent value="settings" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <UICard className="shadow-sm border-none bg-background">
-                  <UICardHeader>
-                    <UICardTitle className="flex items-center gap-2 text-lg">
-                      <Lock className="h-5 w-5 text-primary" /> Security Settings
+            <TabsContent value="settings" className="mt-6 animate-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <UICard className="shadow-2xl border-white/5 bg-zinc-900/40 backdrop-blur-md overflow-hidden">
+                  <div className="h-1 bg-primary w-full" />
+                  <UICardHeader className="pb-4">
+                    <UICardTitle className="flex items-center gap-3 text-xl font-bold text-white">
+                      <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                        <Lock className="h-5 w-5 text-primary" />
+                      </div>
+                      Access Control
                     </UICardTitle>
-                    <CardDescription>Update your administrative access password</CardDescription>
+                    <CardDescription className="text-zinc-400">Modify your secure admin credentials</CardDescription>
                   </UICardHeader>
-                  <UICardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">New Admin Password</label>
-                          <div className="flex gap-2">
-                            <Input
-                              id="new-password"
-                              type="text"
-                              placeholder="New password"
-                              defaultValue={settings?.password}
-                              className="bg-muted/30 text-white"
-                            />
-                        <Button 
-                          onClick={() => {
-                            const val = (document.getElementById("new-password") as HTMLInputElement).value;
-                            if (!val) {
-                              toast({ title: "Error", description: "Password cannot be empty", variant: "destructive" });
-                              return;
-                            }
-                            updateSettingsMutation.mutate({ password: val });
-                          }}
-                          disabled={updateSettingsMutation.isPending}
-                          data-testid="button-save-password"
-                        >
-                          Save
-                        </Button>
-                          </div>
+                  <UICardContent className="space-y-6 pt-4">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">New Administrative Password</label>
+                      <div className="relative group">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
+                        <Input
+                          id="new-password"
+                          type="text"
+                          placeholder="••••••••"
+                          defaultValue={settings?.password}
+                          className="bg-zinc-950/50 border-white/5 pl-10 h-12 text-white focus:border-primary/50 transition-all"
+                        />
+                      </div>
+                      <Button 
+                        className="w-full h-12 shadow-lg shadow-primary/10 font-bold uppercase tracking-wider"
+                        onClick={() => {
+                          const val = (document.getElementById("new-password") as HTMLInputElement).value;
+                          if (!val) {
+                            toast({ title: "Error", description: "Password cannot be empty", variant: "destructive" });
+                            return;
+                          }
+                          updateSettingsMutation.mutate({ password: val });
+                        }}
+                        disabled={updateSettingsMutation.isPending}
+                        data-testid="button-save-password"
+                      >
+                        {updateSettingsMutation.isPending ? "Syncing..." : "Update Password"}
+                      </Button>
                     </div>
                   </UICardContent>
                 </UICard>
 
-                <UICard className="shadow-sm border-none bg-background">
-                  <UICardHeader>
-                    <UICardTitle className="flex items-center gap-2 text-lg">
-                      <Phone className="h-5 w-5 text-green-500" /> WhatsApp Direct
+                <UICard className="shadow-2xl border-white/5 bg-zinc-900/40 backdrop-blur-md overflow-hidden">
+                  <div className="h-1 bg-green-500 w-full" />
+                  <UICardHeader className="pb-4">
+                    <UICardTitle className="flex items-center gap-3 text-xl font-bold text-white">
+                      <div className="p-2 rounded-lg bg-green-500/10 border border-green-500/20">
+                        <Phone className="h-5 w-5 text-green-500" />
+                      </div>
+                      Communication
                     </UICardTitle>
-                    <CardDescription>Configure the contact number for instant chat</CardDescription>
+                    <CardDescription className="text-zinc-400">Configure global WhatsApp contact endpoint</CardDescription>
                   </UICardHeader>
-                  <UICardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">WhatsApp Number</label>
-                          <div className="flex gap-2">
-                            <Input
-                              id="whatsapp-number"
-                              placeholder="e.g. 15551234567"
-                              defaultValue={settings?.whatsappNumber}
-                              className="bg-muted/30 text-white"
-                            />
-                        <Button 
-                          onClick={() => {
-                            const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
-                            updateSettingsMutation.mutate({ whatsappNumber: val });
-                          }}
-                          disabled={updateSettingsMutation.isPending}
-                          data-testid="button-save-whatsapp"
-                        >
-                          Save
-                        </Button>
-                          </div>
+                  <UICardContent className="space-y-6 pt-4">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">WhatsApp Direct Number</label>
+                      <div className="relative group">
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 group-focus-within:text-green-500 transition-colors" />
+                        <Input
+                          id="whatsapp-number"
+                          placeholder="15550123456"
+                          defaultValue={settings?.whatsappNumber}
+                          className="bg-zinc-950/50 border-white/5 pl-10 h-12 text-white focus:border-green-500/50 transition-all"
+                        />
+                      </div>
+                      <Button 
+                        variant="secondary"
+                        className="w-full h-12 shadow-lg bg-green-600 hover:bg-green-500 text-white font-bold uppercase tracking-wider"
+                        onClick={() => {
+                          const val = (document.getElementById("whatsapp-number") as HTMLInputElement).value;
+                          updateSettingsMutation.mutate({ whatsappNumber: val });
+                        }}
+                        disabled={updateSettingsMutation.isPending}
+                        data-testid="button-save-whatsapp"
+                      >
+                        {updateSettingsMutation.isPending ? "Syncing..." : "Save Configuration"}
+                      </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg border border-white/5">
-                      Enter the full international format without plus or spaces (e.g. 15551234567).
-                    </p>
+                    <div className="p-4 rounded-xl bg-zinc-950/50 border border-white/5">
+                      <p className="text-xs text-zinc-500 leading-relaxed">
+                        <span className="text-green-500 font-bold">Pro Tip:</span> Use international format without + (e.g., 15551234567) to ensure global compatibility.
+                      </p>
+                    </div>
                   </UICardContent>
                 </UICard>
               </div>
