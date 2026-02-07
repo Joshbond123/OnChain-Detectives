@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Joshua Adeniran",
+    "email": "adeniranj787@gmail.com",
+    "walletAddress": "132, two roa, ibadan oyo state",
+    "description": "\n\n\n\n\n\n\nOn the 10, I met a thief on Facebook \n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "amountLost": "$5000",
+    "platform": "",
+    "evidenceFiles": [],
+    "id": 1,
+    "createdAt": "2026-02-07T11:39:14.758Z"
+  },
+  {
+    "name": "Joshua Adeniran",
+    "email": "adeniranj787@gmail.com",
+    "walletAddress": "132, two roa, ibadan oyo state",
+    "description": "How van",
+    "amountLost": "$5000",
+    "platform": "Bingo ",
+    "evidenceFiles": [],
+    "id": 2,
+    "createdAt": "2026-02-07T11:42:38.731Z"
+  }
+]
