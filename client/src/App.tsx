@@ -12,7 +12,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/start-case" component={CaseForm} />
+      <Route path="/case-form" component={CaseForm} />
       <Route component={NotFound} />
     </Switch>
   );
