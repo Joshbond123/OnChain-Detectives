@@ -73,7 +73,6 @@ export default function SubmissionDetails() {
                   label="Case Context" 
                   icon={<LayoutDashboard className="h-5 w-5 text-primary" />}
                   items={[
-                    { label: "Platform Involved", value: submission.platform },
                     { label: "Total Amount Lost", value: submission.amountLost }
                   ]}
                 />
@@ -108,25 +107,30 @@ export default function SubmissionDetails() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-primary">
                     <ExternalLink className="h-5 w-5" />
-                    <h3 className="font-bold uppercase tracking-widest text-xs">Attached Evidence</h3>
+                    <h3 className="font-bold uppercase tracking-widest text-xs">Investigative Evidence</h3>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {submission.evidenceFiles.map((file, i) => (
-                      <a 
-                        key={i} 
-                        href={file} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-4 rounded-xl bg-zinc-800 border border-white/5 hover:bg-zinc-700 hover:border-primary/30 transition-all group"
-                      >
-                        <div className="p-2 rounded-lg bg-zinc-900 text-primary group-hover:scale-110 transition-transform">
-                          <ExternalLink className="h-4 w-4" />
+                      <Card key={i} className="bg-zinc-950 border-white/5 overflow-hidden group">
+                        <div className="aspect-video relative">
+                          <img 
+                            src={file} 
+                            alt={`Evidence ${i + 1}`} 
+                            className="w-full h-full object-contain bg-black"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Button asChild variant="outline" size="sm" className="gap-2">
+                              <a href={file} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="h-4 w-4" />
+                                View Full Size
+                              </a>
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium truncate text-zinc-200">Document {i + 1}</p>
-                          <p className="text-[10px] text-zinc-500">Click to view</p>
+                        <div className="p-3 bg-zinc-900/50 border-t border-white/5 flex items-center justify-between">
+                          <span className="text-xs font-medium text-zinc-400">Evidence Asset #{i + 1}</span>
                         </div>
-                      </a>
+                      </Card>
                     ))}
                   </div>
                 </div>

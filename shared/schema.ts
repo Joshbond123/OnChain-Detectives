@@ -9,7 +9,6 @@ export const submissions = pgTable("submissions", {
   walletAddress: text("wallet_address"),
   description: text("description").notNull(),
   amountLost: text("amount_lost"),
-  platform: text("platform"),
   evidenceFiles: text("evidence_files").array(),
   createdAt: timestamp("created_at").defaultNow(),
 });

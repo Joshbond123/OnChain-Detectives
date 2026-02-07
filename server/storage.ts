@@ -43,7 +43,6 @@ export class FileStorage implements IStorage {
       id: data.length + 1,
       createdAt: new Date(),
       amountLost: insertSubmission.amountLost ?? null,
-      platform: insertSubmission.platform ?? null,
       walletAddress: insertSubmission.walletAddress ?? null,
       evidenceFiles: insertSubmission.evidenceFiles ?? [],
     };
