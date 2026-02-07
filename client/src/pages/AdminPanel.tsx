@@ -361,7 +361,7 @@ export default function AdminPanel() {
               <DetailItem label="Wallet" value={selectedSubmission?.walletAddress} icon={<Wallet className="h-4 w-4" />} />
               <div className="col-span-full border-t border-white/10 pt-4 mt-2">
                 <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2 block">Description of Case</label>
-                <p className="text-sm text-zinc-300 leading-relaxed bg-zinc-950 p-4 rounded-lg border border-white/5">
+                <p className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed bg-zinc-950 p-4 rounded-lg border border-white/5">
                   {selectedSubmission?.description}
                 </p>
               </div>
