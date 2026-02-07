@@ -251,8 +251,14 @@ export default function AdminPanel() {
                           </TableCell>
                           <TableCell className="font-medium text-white">{sub.name}</TableCell>
                           <TableCell className="text-zinc-400">{sub.email}</TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="secondary" size="sm" className="h-8 gap-2">
+                          <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                            <Button 
+                              variant="secondary" 
+                              size="sm" 
+                              className="h-8 gap-2"
+                              onClick={() => setSelectedSubmission(sub)}
+                              data-testid={`button-details-${sub.id}`}
+                            >
                               <Eye className="h-4 w-4" /> Details
                             </Button>
                           </TableCell>
