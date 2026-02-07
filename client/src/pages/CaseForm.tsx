@@ -204,7 +204,7 @@ export default function CaseForm() {
                             <FormItem>
                               <FormLabel className="text-zinc-400">How much was lost?</FormLabel>
                               <FormControl>
-                                <Input placeholder="e.g. 1.25 ETH" className="bg-white/5 border-white/10" {...field} value={field.value || ""} />
+                                <Input placeholder="e.g. 1.25 ETH, $500" className="bg-white/5 border-white/10" {...field} value={field.value || ""} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
