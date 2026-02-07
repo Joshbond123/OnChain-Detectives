@@ -146,8 +146,8 @@ export default function CaseForm() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
+          <div className="flex justify-center">
+            <div className="w-full max-w-2xl space-y-8">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                   <Card className="border-white/5 bg-zinc-900/50 backdrop-blur-xl overflow-hidden">
@@ -333,46 +333,6 @@ export default function CaseForm() {
                   </Button>
                 </form>
               </Form>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="border-white/5 bg-zinc-900/50 backdrop-blur-xl">
-                <CardHeader>
-                  <CardTitle className="text-lg">Security Check</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex gap-3">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
-                      <Shield className="h-3 w-3 text-green-500" />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      All data is encrypted in transit and stored in our secure blockchain forensic vault.
-                    </p>
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-                      <Lock className="h-3 w-3 text-blue-500" />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      We never share your information with third parties without explicit legal consent.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/20 bg-primary/5">
-                <CardHeader>
-                  <CardTitle className="text-lg">Need help?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Our team is available 24/7 on WhatsApp for urgent assistance.
-                  </p>
-                  <Button variant="outline" className="w-full border-primary/20 hover:bg-primary/10" onClick={() => (window as any).triggerWhatsApp()}>
-                    Chat with an Agent
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
