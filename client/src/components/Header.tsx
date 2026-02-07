@@ -12,14 +12,8 @@ export function Header() {
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const newCount = clickCount + 1;
-    if (newCount >= 5) {
-      setClickCount(0);
-      setLocation("/admin-access");
-    } else {
-      setClickCount(newCount);
-      // Reset count after 3 seconds of inactivity
-      setTimeout(() => setClickCount(0), 3000);
+    if ((window as any).triggerAdminPanel) {
+      (window as any).triggerAdminPanel();
     }
   };
 

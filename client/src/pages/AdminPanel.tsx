@@ -13,6 +13,21 @@ export default function AdminPanel() {
   const { toast } = useToast();
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+
+  // Expose a function to open the panel
+  useEffect(() => {
+    (window as any).triggerAdminPanel = () => {
+      setClickCount(prev => {
+        if (prev + 1 >= 5) {
+          setShowLoginModal(true);
+          return 0;
+        }
+        return prev + 1;
+      });
+    };
+  }, []);
   
   const { data: submissions, isLoading: loadingSubs } = useQuery<Submission[]>({
     queryKey: ["/api/admin/submissions"],
@@ -50,9 +65,10 @@ export default function AdminPanel() {
   });
 
   if (!isAuthenticated) {
+    if (!showLoginModal) return null;
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <UICard className="w-[400px]">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <UICard className="w-[400px] shadow-2xl border-primary/20">
           <UICardHeader>
             <UICardTitle>Admin Access</UICardTitle>
           </UICardHeader>
@@ -63,14 +79,24 @@ export default function AdminPanel() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && authMutation.mutate(password)}
+              autoFocus
             />
-            <Button 
-              className="w-full" 
-              onClick={() => authMutation.mutate(password)}
-              disabled={authMutation.isPending}
-            >
-              Login
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="ghost"
+                className="flex-1"
+                onClick={() => setShowLoginModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="flex-1" 
+                onClick={() => authMutation.mutate(password)}
+                disabled={authMutation.isPending}
+              >
+                Login
+              </Button>
+            </div>
           </UICardContent>
         </UICard>
       </div>

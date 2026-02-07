@@ -53,11 +53,14 @@ export default function CaseForm() {
         description: "Redirecting you to our investigative team on WhatsApp...",
       });
       
+      // WhatsApp redirection logic
       const whatsappNumber = settings?.whatsappNumber || "1234567890";
       const message = `Hello OnChain Detectives, I just submitted a recovery case.\n\nName: ${data.name}\nWallet: ${data.walletAddress}\nAmount: ${data.amountLost || 'Not specified'}`;
       const encodedMessage = encodeURIComponent(message);
       
-      // Attempting to use universal links for better app detection
+      // WhatsApp and WhatsApp Business detection strategy:
+      // We use the universal wa.me link which handles redirection to the installed app 
+      // (WhatsApp or WhatsApp Business) on mobile devices automatically.
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
       
       setTimeout(() => {

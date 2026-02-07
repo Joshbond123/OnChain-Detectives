@@ -13,7 +13,6 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/start-case" component={CaseForm} />
-      <Route path="/admin-access" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -24,6 +23,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="flex min-h-screen w-full bg-background text-foreground selection:bg-primary/30">
+          <AdminPanel />
           <main className="flex-1 overflow-x-hidden">
             <Router />
           </main>
