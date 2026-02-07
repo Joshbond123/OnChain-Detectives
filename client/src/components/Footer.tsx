@@ -19,36 +19,9 @@ export function Footer() {
             <p className="text-muted-foreground text-lg mb-10 max-w-md leading-relaxed">
               The leading global authority in cryptocurrency asset recovery and blockchain forensics. We provide military-grade investigative solutions for victims of cyber-fraud.
             </p>
-            <div className="flex gap-4">
-              {[Twitter, Github, Linkedin].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary/50 transition-all duration-300">
-                  <Icon className="w-5 h-5 text-white" />
-                </a>
-              ))}
-            </div>
           </div>
           
-          <div className="lg:col-span-2">
-            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Resources</h4>
-            <ul className="space-y-4">
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">Services</a></li>
-              <li><a href="#process" className="text-muted-foreground hover:text-primary transition-colors font-medium">Process</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Reports</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Verification</a></li>
-            </ul>
-          </div>
-
-          <div className="lg:col-span-2">
-            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Policy</h4>
-            <ul className="space-y-4">
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Privacy</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Legal</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Terms</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors font-medium">Contact</a></li>
-            </ul>
-          </div>
-
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Global Operations</h4>
             <ul className="space-y-5">
               <li className="flex items-center gap-3 text-muted-foreground group">
