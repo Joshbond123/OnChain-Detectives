@@ -38,9 +38,23 @@ export class FileStorage implements IStorage {
 
   async createSubmission(insertSubmission: InsertSubmission): Promise<Submission> {
     const data = await this.readJson<Submission[]>(this.submissionsPath, []);
+    
+    // Generate unique Case ID: 5 digits + 2 capital letters
+    const generateCaseId = () => {
+      const digits = Math.floor(10000 + Math.random() * 90000).toString();
+      const letters = String.fromCharCode(65 + Math.random() * 26) + String.fromCharCode(65 + Math.random() * 26);
+      return `${digits}${letters}`;
+    };
+
+    let caseId = generateCaseId();
+    while (data.some(s => s.caseId === caseId)) {
+      caseId = generateCaseId();
+    }
+
     const newSubmission: Submission = {
       ...insertSubmission,
       id: data.length + 1,
+      caseId,
       createdAt: new Date(),
       amountLost: insertSubmission.amountLost ?? null,
       walletAddress: insertSubmission.walletAddress ?? null,

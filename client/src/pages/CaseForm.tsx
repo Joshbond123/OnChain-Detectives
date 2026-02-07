@@ -54,11 +54,11 @@ export default function CaseForm() {
     onSuccess: (data) => {
       toast({
         title: "Case Submitted",
-        description: "Your case has been recorded. Redirecting to WhatsApp for final review...",
+        description: `Your case #${data.caseId} has been recorded. Redirecting to WhatsApp for final review...`,
       });
       
       const whatsappNumber = settings?.whatsappNumber || "1234567890";
-      const message = `Hello OnChain Detectives, I just submitted a recovery case.\n\nName: ${data.name}\nWallet: ${data.walletAddress || 'Not provided'}\nAmount: ${data.amountLost || 'Not specified'}`;
+      const message = `Hello OnChain Detectives,\n\nI just submitted a recovery case.\n\n*Case ID:* ${data.caseId}\n\n*User Details*\nName: ${data.name}\nEmail: ${data.email}\n\n*Scam Details*\nWallet: ${data.walletAddress || 'Not provided'}\nAmount Lost: ${data.amountLost || 'Not specified'}\nDescription: ${data.description}`;
       const encodedMessage = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
       
@@ -329,7 +329,6 @@ export default function CaseForm() {
         </div>
       </main>
       <Footer />
-      <WhatsAppButton />
     </div>
   );
 }
