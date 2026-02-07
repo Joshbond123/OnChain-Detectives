@@ -19,6 +19,7 @@ export default function AdminPanel() {
   const [clickCount, setClickCount] = useState(0);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [activeTab, setActiveTab] = useState("submissions");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Expose a function to open the panel
   useEffect(() => {
@@ -122,19 +123,30 @@ export default function AdminPanel() {
   return (
     <div className="fixed inset-0 z-[100] flex bg-zinc-950 text-white">
       {/* Sidebar Navigation */}
-      <aside className="w-64 border-r border-white/10 bg-zinc-900/50 flex flex-col">
-        <div className="p-6 border-b border-white/10">
+      <aside className={`fixed md:relative z-50 h-full w-64 border-r border-white/10 bg-zinc-900 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} flex flex-col`}>
+        <div className="p-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Database className="h-6 w-6 text-primary" />
             <span className="font-bold text-xl tracking-tight">Admin Panel</span>
           </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden text-white" 
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
         
         <nav className="flex-1 p-4 space-y-2">
           <Button 
             variant={activeTab === "submissions" ? "secondary" : "ghost"}
             className="w-full justify-start gap-3 h-11"
-            onClick={() => setActiveTab("submissions")}
+            onClick={() => {
+              setActiveTab("submissions");
+              setSidebarOpen(false);
+            }}
             data-testid="nav-submissions"
           >
             <LayoutDashboard className="h-4 w-4" />
@@ -144,7 +156,10 @@ export default function AdminPanel() {
           <Button 
             variant={activeTab === "password" ? "secondary" : "ghost"}
             className="w-full justify-start gap-3 h-11"
-            onClick={() => setActiveTab("password")}
+            onClick={() => {
+              setActiveTab("password");
+              setSidebarOpen(false);
+            }}
             data-testid="nav-password"
           >
             <Lock className="h-4 w-4" />
@@ -154,7 +169,10 @@ export default function AdminPanel() {
           <Button 
             variant={activeTab === "whatsapp" ? "secondary" : "ghost"}
             className="w-full justify-start gap-3 h-11"
-            onClick={() => setActiveTab("whatsapp")}
+            onClick={() => {
+              setActiveTab("whatsapp");
+              setSidebarOpen(false);
+            }}
             data-testid="nav-whatsapp"
           >
             <Phone className="h-4 w-4" />
@@ -175,10 +193,29 @@ export default function AdminPanel() {
         </div>
       </aside>
 
+      {/* Overlay for mobile sidebar */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden" 
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Main Content Area */}
       <main className="flex-1 overflow-auto bg-zinc-950">
-        <header className="h-16 border-b border-white/10 flex items-center justify-between px-8 bg-zinc-900/20 backdrop-blur-md sticky top-0 z-10">
-          <h1 className="text-lg font-semibold capitalize">{activeTab}</h1>
+        <header className="h-16 border-b border-white/10 flex items-center justify-between px-4 md:px-8 bg-zinc-900/20 backdrop-blur-md sticky top-0 z-10">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="md:hidden text-white" 
+              onClick={() => setSidebarOpen(true)}
+              data-testid="button-open-sidebar"
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+            <h1 className="text-lg font-semibold capitalize">{activeTab}</h1>
+          </div>
           <div className="text-sm text-zinc-500">
             System Online
           </div>
