@@ -70,7 +70,7 @@ export default function Home() {
               Advanced blockchain forensics and fund recovery. We track, trace, and help recover your lost assets from scammers. <span className="text-foreground font-semibold">Zero upfront fees.</span>
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/start-case">
+              <Link href="/case-form">
                 <Button size="lg" className="min-w-[200px] text-lg font-bold group h-14 shadow-2xl shadow-primary/20 hover:shadow-primary/40 transition-all duration-500">
                   Start Your Case
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
