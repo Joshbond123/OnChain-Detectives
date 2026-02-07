@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useState, useEffect } from "react";
-import { ShieldCheck, Menu, X, Globe, Shield } from "lucide-react";
+import { ShieldCheck, Menu, X, Globe, Shield, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -8,7 +8,9 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+
+  const isCaseForm = location === "/case-form";
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -86,12 +88,24 @@ export function Header() {
             </Button>
           </nav>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle / Home Icon */}
           <button 
             className="lg:hidden w-10 h-10 flex items-center justify-center text-white bg-white/5 rounded-lg border border-white/10"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => {
+              if (isCaseForm) {
+                setLocation("/");
+              } else {
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+              }
+            }}
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isCaseForm ? (
+              <Home className="w-5 h-5" />
+            ) : isMobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
       </div>
