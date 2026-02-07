@@ -330,7 +330,7 @@ export default function AdminPanel() {
             <div className="p-8 space-y-8">
               <div className="flex justify-between items-start border-b border-white/10 pb-6">
                 <div className="space-y-1">
-                  <h2 className="text-3xl font-bold font-display">{selectedSubmission?.name}</h2>
+                  <h2 className="text-3xl font-bold font-display text-white">{selectedSubmission?.name}</h2>
                   <div className="flex items-center gap-4 text-muted-foreground text-sm">
                     <div className="flex items-center gap-1">
                       <Mail className="h-4 w-4" /> {selectedSubmission?.email}
@@ -346,47 +346,47 @@ export default function AdminPanel() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-muted/30 p-4 rounded-xl space-y-2 border border-white/5">
+                <div className="bg-zinc-900/50 p-4 rounded-xl space-y-2 border border-white/5">
                   <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     <Landmark className="h-3 w-3" /> Platform
                   </div>
-                  <div className="font-semibold text-lg">{selectedSubmission?.platform || "—"}</div>
+                  <div className="font-semibold text-lg text-zinc-100">{selectedSubmission?.platform || "—"}</div>
                 </div>
-                <div className="bg-muted/30 p-4 rounded-xl space-y-2 border border-white/5">
+                <div className="bg-zinc-900/50 p-4 rounded-xl space-y-2 border border-white/5">
                   <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     <Landmark className="h-3 w-3" /> Amount Lost
                   </div>
                   <div className="font-semibold text-lg text-destructive">{selectedSubmission?.amountLost || "—"}</div>
                 </div>
-                <div className="bg-muted/30 p-4 rounded-xl space-y-2 border border-white/5">
+                <div className="bg-zinc-900/50 p-4 rounded-xl space-y-2 border border-white/5">
                   <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     <Wallet className="h-3 w-3" /> Scammer Wallet
                   </div>
-                  <div className="font-mono text-sm truncate" title={selectedSubmission?.walletAddress || ""}>
+                  <div className="font-mono text-xs text-primary break-all" title={selectedSubmission?.walletAddress || ""}>
                     {selectedSubmission?.walletAddress || "Not provided"}
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-xl font-bold flex items-center gap-2">
+                <h3 className="text-xl font-bold flex items-center gap-2 text-white">
                    Case Description
                 </h3>
-                <div className="bg-zinc-900/50 p-6 rounded-2xl border border-white/10 leading-relaxed text-zinc-300">
+                <div className="bg-zinc-900 p-6 rounded-2xl border border-white/5 leading-relaxed text-zinc-300">
                   {selectedSubmission?.description}
                 </div>
               </div>
 
               {selectedSubmission?.evidenceFiles && selectedSubmission.evidenceFiles.length > 0 && (
                 <div className="space-y-4">
-                  <h3 className="text-xl font-bold flex items-center gap-2">
+                  <h3 className="text-xl font-bold flex items-center gap-2 text-white">
                     Evidence Gallery ({selectedSubmission.evidenceFiles.length})
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {selectedSubmission.evidenceFiles.map((url, idx) => (
-                      <div key={idx} className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
+                      <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-xl">
                         <img src={url} alt="Evidence" className="w-full h-full object-cover transition-transform group-hover:scale-105" />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Button variant="ghost" size="icon" className="h-10 w-10 text-white" onClick={() => window.open(url, '_blank')}>
                             <ExternalLink className="h-6 w-6" />
                           </Button>
@@ -398,7 +398,7 @@ export default function AdminPanel() {
               )}
 
               <div className="pt-6 border-t border-white/10 flex justify-end">
-                <Button onClick={() => setSelectedSubmission(null)} variant="outline" className="px-8">
+                <Button onClick={() => setSelectedSubmission(null)} variant="outline" className="px-8 border-white/10 hover:bg-white/5 text-white">
                   Close Review
                 </Button>
               </div>

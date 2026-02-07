@@ -126,134 +126,164 @@ export default function CaseForm() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-background selection:bg-primary/30">
+    <div className="flex flex-col min-h-screen w-full bg-zinc-950 selection:bg-primary/30">
       <Header />
       <main className="flex-1 pt-32 pb-24">
-        <div className="container max-w-3xl px-4 mx-auto">
-          <Card className="glass-card border-primary/20 shadow-2xl overflow-hidden">
-            <div className="h-2 bg-primary/20 w-full overflow-hidden">
-               <div className="h-full bg-primary" style={{ width: mutation.isPending ? '60%' : '0%', transition: 'width 2s' }} />
-            </div>
-            <CardHeader className="text-center space-y-4 py-8">
-              <div className="mx-auto w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-inner">
-                <Shield className="text-primary w-10 h-10" />
-              </div>
-              <div className="space-y-2">
-                <CardTitle className="text-4xl font-display font-bold tracking-tight bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
-                  Recover Your Assets
-                </CardTitle>
-                <CardDescription className="text-muted-foreground text-lg max-w-lg mx-auto">
-                  Submit your case details securely. Our blockchain forensic experts will analyze your transaction history immediately.
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent className="p-8">
+        <div className="container max-w-4xl px-4 mx-auto">
+          <div className="mb-12 text-center space-y-4">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20"
+            >
+              <Shield className="text-primary w-8 h-8" />
+            </motion.div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-white">
+              Recovery Case Submission
+            </h1>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Please provide as much detail as possible. Our forensic team will review your case within 24 hours.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3 pb-2 border-b border-white/10">
-                      <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-                        <FileText className="h-4 w-4" />
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                  <Card className="border-white/5 bg-zinc-900/50 backdrop-blur-xl overflow-hidden">
+                    <CardHeader className="border-b border-white/5 bg-white/[0.02] py-4">
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-primary" />
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Contact Information</CardTitle>
                       </div>
-                      <h3 className="font-bold text-lg">General Information</h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Full Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="John Doe" className="h-12 bg-white/5 border-white/10 focus:border-primary/50 transition-colors" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email Address</FormLabel>
-                            <FormControl>
-                              <Input type="email" placeholder="john@example.com" className="h-12 bg-white/5 border-white/10 focus:border-primary/50 transition-colors" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="amountLost"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Estimated Loss</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. 2.5 BTC" className="h-12 bg-white/5 border-white/10" {...field} value={field.value || ""} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="platform"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Exchange/App Used</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. Trust Wallet, Binance" className="h-12 bg-white/5 border-white/10" {...field} value={field.value || ""} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3 pb-2 border-b border-white/10">
-                      <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-                        <Wallet className="h-4 w-4" />
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-zinc-400">Full Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="John Doe" className="bg-white/5 border-white/10" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-zinc-400">Email Address</FormLabel>
+                              <FormControl>
+                                <Input type="email" placeholder="john@example.com" className="bg-white/5 border-white/10" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
-                      <h3 className="font-bold text-lg">Case Evidence</h3>
-                    </div>
-                    
-                    <div className="space-y-4">
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-white/5 bg-zinc-900/50 backdrop-blur-xl overflow-hidden">
+                    <CardHeader className="border-b border-white/5 bg-white/[0.02] py-4">
+                      <div className="flex items-center gap-2">
+                        <Wallet className="h-4 w-4 text-primary" />
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Incident Details</CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="amountLost"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-zinc-400">Amount Lost</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g. 0.5 BTC" className="bg-white/5 border-white/10" {...field} value={field.value || ""} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="platform"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-zinc-400">Platform/Exchange</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g. MetaMask, Binance" className="bg-white/5 border-white/10" {...field} value={field.value || ""} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-zinc-400">Case Summary</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Tell us what happened..." 
+                                className="min-h-[120px] bg-white/5 border-white/10 resize-none" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-primary/20 bg-primary/5 backdrop-blur-xl overflow-hidden">
+                    <CardHeader className="border-b border-primary/10 bg-primary/5 py-4">
+                      <div className="flex items-center gap-2">
+                        <Database className="h-4 w-4 text-primary" />
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider">Evidence Submission</CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-6">
+                      <p className="text-sm text-zinc-400">
+                        Please provide at least one of the following for our detectives to begin the trace.
+                      </p>
+                      
                       <FormField
                         control={form.control}
                         name="walletAddress"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Recipient's Wallet Address</FormLabel>
-                            <FormDescription className="text-xs">Provide the address where the funds were sent (if known)</FormDescription>
+                            <FormLabel className="text-zinc-300">Scammer's Wallet Address</FormLabel>
                             <FormControl>
-                              <Input placeholder="0x..." className="h-12 bg-white/5 border-white/10 font-mono text-sm" {...field} value={field.value || ""} />
+                              <Input placeholder="0x..." className="bg-zinc-950 border-white/10 font-mono" {...field} value={field.value || ""} />
                             </FormControl>
+                            <FormDescription className="text-xs">The destination address where funds were sent.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
 
-                      <div className="space-y-3">
-                        <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Screenshots & Proof</FormLabel>
-                        <FormDescription className="text-xs">Upload transaction receipts, chat logs, or scammer profiles</FormDescription>
-                        
+                      <div className="space-y-4">
+                        <FormLabel className="text-zinc-300">Evidence Screenshots</FormLabel>
                         <div 
                           onClick={() => fileInputRef.current?.click()}
-                          className="border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center gap-4 bg-white/5 hover:bg-white/10 hover:border-primary/30 cursor-pointer transition-all"
+                          className="border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center gap-3 bg-zinc-950/50 hover:bg-zinc-900 hover:border-primary/30 cursor-pointer transition-all"
                         >
-                          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                            {isUploading ? <Loader2 className="h-6 w-6 animate-spin text-primary" /> : <Upload className="h-6 w-6 text-primary" />}
+                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            {isUploading ? <Loader2 className="h-5 w-5 animate-spin text-primary" /> : <Upload className="h-5 w-5 text-primary" />}
                           </div>
                           <div className="text-center">
-                            <p className="font-medium">Click to upload files</p>
-                            <p className="text-xs text-muted-foreground">PNG, JPG or PDF (Max 10MB per file)</p>
+                            <p className="text-sm font-medium text-zinc-200">Click to upload files</p>
+                            <p className="text-xs text-muted-foreground">PNG, JPG or PDF</p>
                           </div>
                           <input 
                             type="file" 
@@ -266,19 +296,19 @@ export default function CaseForm() {
                         </div>
 
                         {files.length > 0 && (
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
                             {files.map((file, idx) => (
-                              <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10 aspect-video bg-zinc-900">
+                              <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10 aspect-square bg-zinc-900">
                                 <img src={file.url} alt="Evidence" className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                   <Button 
                                     type="button" 
                                     variant="destructive" 
                                     size="icon" 
-                                    className="h-8 w-8"
+                                    className="h-7 w-7"
                                     onClick={() => removeFile(idx)}
                                   >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2 className="h-3 w-3" />
                                   </Button>
                                 </div>
                               </div>
@@ -286,65 +316,72 @@ export default function CaseForm() {
                           </div>
                         )}
                       </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
 
-                  <div className="space-y-6">
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Case Summary</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Describe exactly what happened step-by-step..."
-                              className="min-h-[150px] bg-white/5 border-white/10 focus:border-primary/50 resize-none p-4 transition-colors"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="bg-primary/5 rounded-xl p-6 border border-primary/20 space-y-4">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1">
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        By submitting this form, you authorize our forensic team to conduct an initial screening of the provided data. Your information is protected by attorney-client privilege.
-                      </p>
-                    </div>
-                    <Button 
-                      type="submit" 
-                      className="w-full h-16 text-xl font-bold shadow-2xl shadow-primary/20 hover:scale-[1.01] transition-transform active:scale-[0.99]" 
-                      disabled={mutation.isPending}
-                    >
-                      {mutation.isPending ? (
-                        <>
-                          <Loader2 className="mr-3 h-7 w-7 animate-spin" />
-                          Submitting Case...
-                        </>
-                      ) : (
-                        <>
-                          Submit Recovery Request
-                          <ArrowRight className="ml-3 h-7 w-7" />
-                        </>
-                      )}
-                    </Button>
-                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full h-14 text-lg font-bold shadow-xl shadow-primary/20" 
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending ? (
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="mr-2 h-5 w-5" />
+                    )}
+                    {mutation.isPending ? "Submitting Case..." : "Submit for Investigation"}
+                  </Button>
                 </form>
               </Form>
-            </CardContent>
-          </Card>
+            </div>
+
+            <div className="space-y-6">
+              <Card className="border-white/5 bg-zinc-900/50 backdrop-blur-xl">
+                <CardHeader>
+                  <CardTitle className="text-lg">Security Check</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex gap-3">
+                    <div className="mt-1 h-5 w-5 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+                      <Shield className="h-3 w-3 text-green-500" />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      All data is encrypted in transit and stored in our secure blockchain forensic vault.
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="mt-1 h-5 w-5 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
+                      <Lock className="h-3 w-3 text-blue-500" />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      We never share your information with third parties without explicit legal consent.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="text-lg">Need help?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Our team is available 24/7 on WhatsApp for urgent assistance.
+                  </p>
+                  <Button variant="outline" className="w-full border-primary/20 hover:bg-primary/10" onClick={() => (window as any).triggerWhatsApp()}>
+                    Chat with an Agent
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />
       <WhatsAppButton />
     </div>
+  );
+}
   );
 }
 
