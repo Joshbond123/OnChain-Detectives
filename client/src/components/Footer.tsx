@@ -28,7 +28,7 @@ export function Footer() {
           </div>
           
           <div className="lg:col-span-4">
-            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Operational Status</h4>
+            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Headquarters</h4>
             <ul className="space-y-5">
               <li className="flex items-center gap-3 text-muted-foreground group">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
@@ -42,7 +42,7 @@ export function Footer() {
 
         <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-sm text-muted-foreground font-medium">
-            &copy; {new Date().getFullYear()} OnChain Detectives. Secured by Blockchain Encryption.
+            &copy; {new Date().getFullYear()} OnChain Detectives. All rights reserved. Professional Blockchain Forensic Services.
           </div>
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
