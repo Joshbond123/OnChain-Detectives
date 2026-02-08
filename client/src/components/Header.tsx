@@ -3,12 +3,18 @@ import { useState, useEffect } from "react";
 import { ShieldCheck, Menu, X, Globe, Shield, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { type AdminSettings } from "@shared/schema";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [location, setLocation] = useLocation();
+
+  const { data: settings } = useQuery<AdminSettings>({
+    queryKey: ["/api/admin/settings"],
+  });
 
   const isCaseForm = location === "/case-form";
 
@@ -26,6 +32,17 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Update favicon if logo exists
+  useEffect(() => {
+    if (settings?.logoUrl) {
+      const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement || document.createElement('link');
+      link.type = 'image/x-icon';
+      link.rel = 'icon';
+      link.href = settings.logoUrl;
+      document.getElementsByTagName('head')[0].appendChild(link);
+    }
+  }, [settings?.logoUrl]);
 
   const navLinks = [
     { name: "Process", href: "#process" },
@@ -52,8 +69,12 @@ export function Header() {
           <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
-              <div className="relative z-10 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-xl shadow-primary/20">
-                <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-white" />
+              <div className="relative z-10 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-xl shadow-primary/20 overflow-hidden">
+                {settings?.logoUrl ? (
+                  <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-1" />
+                ) : (
+                  <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                )}
               </div>
             </div>
             <div className="flex flex-col">

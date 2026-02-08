@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Card as UICard, CardContent as UICardContent, CardHeader as UICardHeader, CardTitle as UICardTitle, CardDescription } from "@/components/ui/card";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Submission, AdminSettings } from "@shared/schema";
-import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X, Eye, Calendar, User, Mail, Landmark, Wallet, ExternalLink, Trash2, FolderOpen } from "lucide-react";
+import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X, Eye, Calendar, User, Mail, Landmark, Wallet, ExternalLink, Trash2, FolderOpen, Upload, Loader2, Shield } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useLocation } from "wouter";
@@ -22,6 +22,9 @@ export default function AdminPanel() {
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [activeTab, setActiveTab] = useState("submissions");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [newLogoUrl, setNewLogoUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Expose a function to open the panel
   useEffect(() => {
@@ -72,6 +75,26 @@ export default function AdminPanel() {
     },
   });
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setNewLogoUrl(base64);
+      setIsUploading(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const saveLogo = () => {
+    if (newLogoUrl) {
+      updateSettingsMutation.mutate({ logoUrl: newLogoUrl });
+    }
+  };
+
   const deleteSubmissionMutation = useMutation({
     mutationFn: async (id: number) => {
       await apiRequest("DELETE", `/api/admin/submissions/${id}`);
@@ -91,6 +114,13 @@ export default function AdminPanel() {
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
         <UICard className="w-full max-w-md shadow-2xl border-primary/20 bg-zinc-900">
           <UICardHeader className="text-center">
+            <div className="mx-auto w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 overflow-hidden">
+              {settings?.logoUrl ? (
+                <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-2" />
+              ) : (
+                <ShieldCheck className="w-6 h-6 text-white" />
+              )}
+            </div>
             <UICardTitle className="text-2xl font-bold text-white">Admin Access</UICardTitle>
             <CardDescription>Enter password to access the dashboard</CardDescription>
           </UICardHeader>
@@ -140,9 +170,15 @@ export default function AdminPanel() {
       {/* Sidebar Navigation */}
       <aside className={`fixed md:relative z-50 h-full w-64 border-r border-white/10 bg-zinc-900 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} flex flex-col`}>
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Database className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl tracking-tight">Admin Panel</span>
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+              {settings?.logoUrl ? (
+                <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-1" />
+              ) : (
+                <Database className="h-5 w-5 text-primary" />
+              )}
+            </div>
+            <span className="font-bold text-xl tracking-tight truncate">Admin Panel</span>
           </div>
           <Button 
             variant="ghost" 
@@ -169,10 +205,10 @@ export default function AdminPanel() {
           </Button>
           
           <Button 
-            variant={activeTab === "password" ? "secondary" : "ghost"}
+            variant={activeTab === "security" ? "secondary" : "ghost"}
             className="w-full justify-start gap-3 h-11"
             onClick={() => {
-              setActiveTab("password");
+              setActiveTab("security");
               setSidebarOpen(false);
             }}
             data-testid="nav-password"
@@ -192,6 +228,19 @@ export default function AdminPanel() {
           >
             <Phone className="h-4 w-4" />
             WhatsApp
+          </Button>
+
+          <Button 
+            variant={activeTab === "branding" ? "secondary" : "ghost"}
+            className="w-full justify-start gap-3 h-11"
+            onClick={() => {
+              setActiveTab("branding");
+              setSidebarOpen(false);
+            }}
+            data-testid="nav-branding"
+          >
+            <Settings className="h-4 w-4" />
+            Branding
           </Button>
         </nav>
 
@@ -313,7 +362,7 @@ export default function AdminPanel() {
             </div>
           )}
 
-          {activeTab === "password" && (
+          {activeTab === "security" && (
             <div className="max-w-md mx-auto">
               <UICard className="bg-zinc-900 border-white/10">
                 <UICardHeader>
@@ -383,8 +432,74 @@ export default function AdminPanel() {
               </UICard>
             </div>
           )}
+
+          {activeTab === "branding" && (
+            <div className="max-w-md mx-auto">
+              <UICard className="bg-zinc-900 border-white/10">
+                <UICardHeader>
+                  <UICardTitle className="flex items-center gap-2">
+                    <Settings className="h-5 w-5 text-primary" /> Branding Settings
+                  </UICardTitle>
+                  <CardDescription>Manage website logo and browser icon</CardDescription>
+                </UICardHeader>
+                <UICardContent className="space-y-6">
+                  <div className="flex flex-col items-center gap-6 p-8 border-2 border-dashed border-white/10 rounded-2xl bg-zinc-950/50">
+                    <div className="w-32 h-32 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center overflow-hidden relative group">
+                      {newLogoUrl || settings?.logoUrl ? (
+                        <img 
+                          src={newLogoUrl || settings?.logoUrl || ""} 
+                          alt="Logo Preview" 
+                          className="max-w-full max-h-full object-contain p-2" 
+                        />
+                      ) : (
+                        <Shield className="w-12 h-12 text-zinc-800" />
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-col w-full gap-3">
+                      <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleLogoUpload} 
+                        className="hidden" 
+                        accept="image/*"
+                      />
+                      <Button 
+                        variant="outline" 
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploading}
+                        className="border-white/10 w-full"
+                      >
+                        {isUploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
+                        {newLogoUrl ? "Change Selection" : "Select New Logo"}
+                      </Button>
+                      <Button 
+                        onClick={saveLogo} 
+                        disabled={!newLogoUrl || updateSettingsMutation.isPending}
+                        className="w-full"
+                      >
+                        {updateSettingsMutation.isPending ? (
+                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        ) : (
+                          <CheckCircle2 className="w-4 h-4 mr-2" />
+                        )}
+                        Apply Site-wide
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="text-xs text-muted-foreground bg-white/5 p-4 rounded-lg border border-white/5">
+                    <p><strong>Note:</strong> Uploading a new logo will automatically update the header, admin screens, and the browser tab icon (favicon) across the entire site.</p>
+                  </div>
+                </UICardContent>
+              </UICard>
+            </div>
+          )}
         </div>
       </main>
     </div>
   );
 }
+
+// Adding CheckCircle2 to icons
+import { CheckCircle2 } from "lucide-react";
+
