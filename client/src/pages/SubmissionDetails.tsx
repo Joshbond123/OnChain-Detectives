@@ -38,7 +38,14 @@ export default function SubmissionDetails() {
         <Button 
           variant="ghost" 
           className="gap-2 text-zinc-400 hover:text-white"
-          onClick={() => setLocation("/")}
+          onClick={() => {
+            setLocation("/");
+            setTimeout(() => {
+              if ((window as any).triggerAdminPanel) {
+                (window as any).triggerAdminPanel();
+              }
+            }, 100);
+          }}
         >
           <ArrowLeft className="h-4 w-4" /> Back to Admin Panel
         </Button>
