@@ -20,5 +20,16 @@
     "evidenceFiles": [],
     "id": 2,
     "createdAt": "2026-02-07T22:38:12.409Z"
+  },
+  {
+    "name": "James victor",
+    "email": "nj787@gmail.com",
+    "walletAddress": "&*@&#,;#,'djjxjdjjdjjdjdj",
+    "description": "I met this scammers on tiktok",
+    "amountLost": "$5000",
+    "evidenceFiles": [],
+    "id": 3,
+    "caseId": "68643QV",
+    "createdAt": "2026-02-08T07:58:11.909Z"
   }
 ]
