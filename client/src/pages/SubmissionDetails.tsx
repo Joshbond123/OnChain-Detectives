@@ -38,7 +38,7 @@ export default function SubmissionDetails() {
         <Button 
           variant="ghost" 
           className="gap-2 text-zinc-400 hover:text-white"
-          onClick={() => window.history.back()}
+          onClick={() => setLocation("/")}
         >
           <ArrowLeft className="h-4 w-4" /> Back to Dashboard
         </Button>

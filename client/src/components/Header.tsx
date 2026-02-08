@@ -69,7 +69,7 @@ export function Header() {
           <Link href="/" onClick={handleLogoClick} className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
-              <div className="relative z-10 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-xl shadow-primary/20 overflow-hidden">
+              <div className="relative z-10 w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-xl shadow-primary/20 overflow-hidden">
                 {settings?.logoUrl ? (
                   <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-1" />
                 ) : (

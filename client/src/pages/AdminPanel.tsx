@@ -132,7 +132,7 @@ export default function AdminPanel() {
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
         <UICard className="w-full max-w-md shadow-2xl border-primary/20 bg-zinc-900">
           <UICardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 overflow-hidden">
+            <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 overflow-hidden">
               {settings?.logoUrl ? (
                 <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-2" />
               ) : (
@@ -189,7 +189,7 @@ export default function AdminPanel() {
       <aside className={`fixed md:relative z-50 h-full w-64 border-r border-white/10 bg-zinc-900 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} flex flex-col`}>
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2 overflow-hidden">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
               {settings?.logoUrl ? (
                 <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-1" />
               ) : (
@@ -462,7 +462,7 @@ export default function AdminPanel() {
                 </UICardHeader>
                 <UICardContent className="space-y-6">
                   <div className="flex flex-col items-center gap-6 p-8 border-2 border-dashed border-white/10 rounded-2xl bg-zinc-950/50">
-                    <div className="w-32 h-32 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center overflow-hidden relative group">
+                    <div className="w-32 h-32 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center overflow-hidden relative group">
                       {newLogoUrl || settings?.logoUrl ? (
                         <img 
                           src={newLogoUrl || settings?.logoUrl || ""} 
