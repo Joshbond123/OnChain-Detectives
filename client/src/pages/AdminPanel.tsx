@@ -134,7 +134,7 @@ export default function AdminPanel() {
           <UICardHeader className="text-center">
             <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 overflow-hidden">
               {settings?.logoUrl ? (
-                <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-2" />
+                <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-cover p-0" />
               ) : (
                 <ShieldCheck className="w-6 h-6 text-white" />
               )}
@@ -191,7 +191,7 @@ export default function AdminPanel() {
           <div className="flex items-center gap-2 overflow-hidden">
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
               {settings?.logoUrl ? (
-                <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-1" />
+                <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-cover p-0" />
               ) : (
                 <Database className="h-5 w-5 text-primary" />
               )}
@@ -467,7 +467,7 @@ export default function AdminPanel() {
                         <img 
                           src={newLogoUrl || settings?.logoUrl || ""} 
                           alt="Logo Preview" 
-                          className="max-w-full max-h-full object-contain p-2" 
+                          className="w-full h-full object-cover p-0" 
                         />
                       ) : (
                         <Shield className="w-12 h-12 text-zinc-800" />
