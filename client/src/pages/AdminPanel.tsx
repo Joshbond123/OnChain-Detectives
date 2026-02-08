@@ -398,8 +398,7 @@ export default function AdminPanel() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            window.history.pushState({}, '', `/admin/submission/${sub.id}`);
-                            window.dispatchEvent(new PopStateEvent('popstate'));
+                            setLocation(`/admin/submission/${sub.id}`);
                           }}
                         >
                           <TableCell className="text-zinc-500 font-mono text-xs">
@@ -416,8 +415,7 @@ export default function AdminPanel() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  window.history.pushState({}, '', `/admin/submission/${sub.id}`);
-                                  window.dispatchEvent(new PopStateEvent('popstate'));
+                                  setLocation(`/admin/submission/${sub.id}`);
                                 }}
                                 data-testid={`button-open-${sub.id}`}
                               >

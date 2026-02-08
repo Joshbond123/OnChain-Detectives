@@ -37,21 +37,7 @@ export default function SubmissionDetails() {
         <Button 
           variant="ghost" 
           className="gap-2 text-zinc-400 hover:text-white"
-          onClick={() => {
-            setLocation("/");
-            setTimeout(() => {
-              const adminState = localStorage.getItem("admin_auth");
-              if (adminState === "true") {
-                // If we have a local session marker, try to trigger the panel directly
-                if ((window as any).triggerAdminPanel) {
-                  (window as any).triggerAdminPanel(true);
-                  // Ensure we show the dashboard tab
-                  const event = new CustomEvent('setAdminTab', { detail: 'dashboard' });
-                  window.dispatchEvent(event);
-                }
-              }
-            }, 100);
-          }}
+          onClick={() => setLocation("/admin")}
         >
           <ArrowLeft className="h-4 w-4" /> Back to Admin Panel
         </Button>
