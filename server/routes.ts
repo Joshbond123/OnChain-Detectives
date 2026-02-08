@@ -12,10 +12,14 @@ const upload = multer({
   storage: multer.diskStorage({
     destination: "uploads/",
     filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
       const ext = path.extname(file.originalname);
-      cb(null, `logo${ext}`);
+      cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
     },
   }),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit per file
+  }
 });
 
 export async function registerRoutes(
@@ -52,15 +56,26 @@ export async function registerRoutes(
       res.status(500).json({ message: "Failed to upload logo" });
     }
   });
-  app.post("/api/submissions", async (req, res) => {
+
+  app.post("/api/submissions", upload.array("evidence"), async (req, res) => {
     try {
-      const data = insertSubmissionSchema.parse(req.body);
+      const files = (req.files as Express.Multer.File[]) || [];
+      const evidenceFiles = files.map(f => `/uploads/${f.filename}`);
+
+      // Handle the body parsing which might come as strings from FormData
+      const body = {
+        ...req.body,
+        evidenceFiles,
+      };
+
+      const data = insertSubmissionSchema.parse(body);
       const submission = await storage.createSubmission(data);
       res.status(201).json(submission);
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({ message: err.errors[0].message });
       }
+      console.error("Submission error:", err);
       res.status(500).json({ message: "Internal server error" });
     }
   });
