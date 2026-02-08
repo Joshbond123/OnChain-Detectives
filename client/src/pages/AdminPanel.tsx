@@ -21,6 +21,14 @@ export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem("admin_auth") === "true";
   });
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
+  const [activeTab, setActiveTab] = useState("submissions");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [newLogoUrl, setNewLogoUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
