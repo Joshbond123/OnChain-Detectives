@@ -13,5 +13,23 @@
     "id": 1,
     "caseId": "99301CB",
     "createdAt": "2026-02-08T08:24:10.450Z"
+  },
+  {
+    "name": "Mary jean",
+    "email": "sophiemae802@gmail.com",
+    "walletAddresses": [
+      "Yhrtgljthkovfyxxfkrhz",
+      "Gfsgzfckfzdfbdbzfbhz",
+      "Hfdnjxrnxyjxxgjzhnuy"
+    ],
+    "description": "It was on Add a Settings section inside the admin panel that allows the administrator to change and manage the website logo.\r\nThe settings page must provide an upload option where the admin can:\r\nupload a new logo image\r\npreview the logo before saving\r\nreplace the current logo across the entire website\r\nAfter saving, the system must automatically update and use the new logo in all logo locations, including:\r\nthe website header / navigation bar\r\nlogin or admin screens\r\nany branding areas where the logo appears\r\nThe uploaded logo must also be used as the favicon (browser tab icon).\r\nEnsure the change is applied immediately and stored in the file-based storage so it remains after reloads or server restarts.\r\nThe feature must work smoothly, with proper validation, and without affecting any other part of the system.:\r\nAdd a Settings section inside the admin panel that allows the administrator to change and manage the website logo.\r\nThe settings page must provide an upload option where the admin can:\r\nupload a new logo image\r\npreview the logo before saving\r\nreplace the current logo across the entire website\r\nAfter saving, the system must automatically update and use the new logo in all logo locations, including:\r\nthe website header / navigation bar\r\nlogin or admin screens\r\nany branding areas where the logo appears\r\nThe uploaded logo must also be used as the favicon (browser tab icon).\r\nEnsure the change is applied immediately and stored in the file-based storage so it remains after reloads or server restarts.\r\nThe feature must work smoothly, with proper validation, and without affecting any other part of the system.",
+    "amountLost": "1.5 btc, $5000 ",
+    "evidenceFiles": [
+      "/uploads/evidence-1770565241015-654968088.jpg",
+      "/uploads/evidence-1770565242743-767776350.jpg"
+    ],
+    "id": 2,
+    "caseId": "86984OO",
+    "createdAt": "2026-02-08T15:40:47.507Z"
   }
 ]

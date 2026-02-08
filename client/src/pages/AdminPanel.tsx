@@ -368,7 +368,11 @@ export default function AdminPanel() {
                         <TableRow 
                           key={sub.id} 
                           className="border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
-                          onClick={() => window.location.href = `/admin/submission/${sub.id}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setLocation(`/admin/submission/${sub.id}`);
+                          }}
                         >
                           <TableCell className="text-zinc-500 font-mono text-xs">
                             {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString() : "N/A"}
@@ -384,7 +388,7 @@ export default function AdminPanel() {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  window.location.href = `/admin/submission/${sub.id}`;
+                                  setLocation(`/admin/submission/${sub.id}`);
                                 }}
                                 data-testid={`button-open-${sub.id}`}
                               >
