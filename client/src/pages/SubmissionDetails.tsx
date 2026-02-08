@@ -40,7 +40,7 @@ export default function SubmissionDetails() {
           className="gap-2 text-zinc-400 hover:text-white"
           onClick={() => setLocation("/")}
         >
-          <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+          <ArrowLeft className="h-4 w-4" /> Back to Admin Panel
         </Button>
 
         <Card className="bg-zinc-900 border-white/10 overflow-hidden">
