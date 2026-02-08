@@ -18,6 +18,7 @@ export const adminSettings = pgTable("admin_settings", {
   id: serial("id").primaryKey(),
   password: text("password").notNull().default("12345"),
   whatsappNumber: text("whatsapp_number").notNull().default(""),
+  logoUrl: text("logo_url"),
 });
 
 export const insertSubmissionSchema = createInsertSchema(submissions).omit({
