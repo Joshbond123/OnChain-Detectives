@@ -15,6 +15,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/case-form" component={CaseForm} />
       <Route path="/admin/submission/:id" component={SubmissionDetails} />
+      <Route path="/admin" component={Home} />
       <Route component={NotFound} />
     </Switch>
   );

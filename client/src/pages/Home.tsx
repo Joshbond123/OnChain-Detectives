@@ -45,7 +45,7 @@ const staggerContainer = {
 
 export default function Home() {
   return (
-    <div className="flex flex-col w-full bg-background selection:bg-primary/30">
+    <div className="flex flex-col w-full bg-zinc-950 selection:bg-primary/30">
       <Header />
       
       {/* Hero Section */}
