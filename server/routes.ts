@@ -112,7 +112,7 @@ export async function registerRoutes(
               p256dh: sub.p256dh,
               auth: sub.auth
             }
-          }, notificationPayload).catch(err => {
+          }, notificationPayload).catch((err: any) => {
             if (err.statusCode === 410 || err.statusCode === 404) {
               return storage.removePushSubscription(sub.endpoint);
             }

@@ -107,6 +107,7 @@ export class FileStorage implements IStorage {
       ...sub,
       id: data.length + 1,
       createdAt: new Date(),
+      userAgent: sub.userAgent ?? null,
     };
     data.push(newSub);
     await this.writeJson(this.pushSubscriptionsPath, data);
