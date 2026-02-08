@@ -26,7 +26,8 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export default function CaseForm() {
   const { toast } = useToast();
-  const [files, setFiles] = useState<{ name: string; url: string }[]>([]);
+  const [rawFiles, setRawFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<{ name: string; url: string }[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,7 +49,27 @@ export default function CaseForm() {
 
   const mutation = useMutation({
     mutationFn: async (data: InsertSubmission) => {
-      const res = await apiRequest("POST", "/api/submissions", data);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("description", data.description);
+      if (data.walletAddress) formData.append("walletAddress", data.walletAddress);
+      if (data.amountLost) formData.append("amountLost", data.amountLost);
+      
+      rawFiles.forEach((file) => {
+        formData.append("evidence", file);
+      });
+
+      const res = await fetch("/api/submissions", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to submit case");
+      }
+      
       return res.json();
     },
     onSuccess: (data) => {
@@ -80,11 +101,10 @@ export default function CaseForm() {
     if (!selectedFiles || selectedFiles.length === 0) return;
 
     setIsUploading(true);
-    // In a real app, this would upload to S3/Cloudinary. 
-    // Here we simulate and use base64 for the demonstration/task requirements.
     try {
-      const newFiles = await Promise.all(
-        Array.from(selectedFiles).map(async (file) => {
+      const newRawFiles = Array.from(selectedFiles);
+      const newPreviews = await Promise.all(
+        newRawFiles.map(async (file) => {
           return new Promise<{ name: string; url: string }>((resolve) => {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -95,10 +115,11 @@ export default function CaseForm() {
         })
       );
       
-      const updatedFiles = [...files, ...newFiles];
-      setFiles(updatedFiles);
-      form.setValue("evidenceFiles", updatedFiles.map(f => f.url));
-      toast({ title: "Files uploaded", description: `${newFiles.length} file(s) added successfully.` });
+      setRawFiles(prev => [...prev, ...newRawFiles]);
+      setPreviews(prev => [...prev, ...newPreviews]);
+      // We don't set evidenceFiles in form anymore as we'll send raw files
+      form.setValue("evidenceFiles", ["dummy"]); // Keep validation happy if needed, though schema might allow empty
+      toast({ title: "Files added", description: `${newPreviews.length} file(s) added successfully.` });
     } catch (err) {
       toast({ title: "Upload failed", variant: "destructive" });
     } finally {
@@ -107,13 +128,15 @@ export default function CaseForm() {
   };
 
   const removeFile = (index: number) => {
-    const updated = files.filter((_, i) => i !== index);
-    setFiles(updated);
-    form.setValue("evidenceFiles", updated.map(f => f.url));
+    setRawFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviews(prev => prev.filter((_, i) => i !== index));
+    if (previews.length <= 1) {
+      form.setValue("evidenceFiles", []);
+    }
   };
 
   function onSubmit(data: InsertSubmission) {
-    if (!data.walletAddress && (!data.evidenceFiles || data.evidenceFiles.length === 0)) {
+    if (!data.walletAddress && rawFiles.length === 0) {
       toast({
         title: "Evidence Required",
         description: "Please provide either a wallet address or upload evidence screenshots.",
@@ -286,9 +309,9 @@ export default function CaseForm() {
                           />
                         </div>
 
-                        {files.length > 0 && (
+                        {previews.length > 0 && (
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                            {files.map((file, idx) => (
+                            {previews.map((file, idx) => (
                               <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10 aspect-square bg-zinc-900">
                                 <img src={file.url} alt="Evidence" className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
