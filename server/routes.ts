@@ -136,6 +136,16 @@ export async function registerRoutes(
     res.json(subs);
   });
 
+  app.get("/api/admin/submissions/:id", async (req, res) => {
+    const subs = await storage.getSubmissions();
+    const sub = subs.find(s => s.id === parseInt(req.params.id));
+    if (sub) {
+      res.json(sub);
+    } else {
+      res.status(404).json({ message: "Submission not found" });
+    }
+  });
+
   app.delete("/api/admin/submissions/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);

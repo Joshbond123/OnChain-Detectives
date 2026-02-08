@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useLocation } from "wouter";
 
+import AdminDashboard from "./AdminDashboard";
+
 export default function AdminPanel() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -24,7 +26,7 @@ export default function AdminPanel() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
-  const [activeTab, setActiveTab] = useState("submissions");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [newLogoUrl, setNewLogoUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -37,6 +39,14 @@ export default function AdminPanel() {
       localStorage.removeItem("admin_auth");
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    const handleSetTab = (e: any) => {
+      if (e.detail) setActiveTab(e.detail);
+    };
+    window.addEventListener('setAdminTab', handleSetTab);
+    return () => window.removeEventListener('setAdminTab', handleSetTab);
+  }, []);
 
   // Expose a function to open the panel
   useEffect(() => {
@@ -226,6 +236,19 @@ export default function AdminPanel() {
         
         <nav className="flex-1 p-4 space-y-2">
           <Button 
+            variant={activeTab === "dashboard" ? "secondary" : "ghost"}
+            className="w-full justify-start gap-3 h-11"
+            onClick={() => {
+              setActiveTab("dashboard");
+              setSidebarOpen(false);
+            }}
+            data-testid="nav-dashboard"
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </Button>
+
+          <Button 
             variant={activeTab === "submissions" ? "secondary" : "ghost"}
             className="w-full justify-start gap-3 h-11"
             onClick={() => {
@@ -234,7 +257,7 @@ export default function AdminPanel() {
             }}
             data-testid="nav-submissions"
           >
-            <LayoutDashboard className="h-4 w-4" />
+            <FolderOpen className="h-4 w-4" />
             Submissions
           </Button>
           
@@ -346,6 +369,10 @@ export default function AdminPanel() {
         </header>
 
         <div className="p-8">
+          {activeTab === "dashboard" && (
+            <AdminDashboard />
+          )}
+
           {activeTab === "submissions" && (
             <div className="space-y-6">
               <UICard className="bg-zinc-900 border-white/10">

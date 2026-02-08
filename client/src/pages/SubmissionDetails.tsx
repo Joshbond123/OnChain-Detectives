@@ -9,11 +9,10 @@ export default function SubmissionDetails() {
   const { id } = useParams();
   const [, setLocation] = useLocation();
 
-  const { data: submissions, isLoading } = useQuery<Submission[]>({
-    queryKey: ["/api/admin/submissions"],
+  const { data: submission, isLoading } = useQuery<Submission>({
+    queryKey: [`/api/admin/submissions/${id}`],
+    enabled: !!id,
   });
-
-  const submission = submissions?.find((s) => s.id === Number(id));
 
   if (isLoading) {
     return (
@@ -46,6 +45,9 @@ export default function SubmissionDetails() {
                 // If we have a local session marker, try to trigger the panel directly
                 if ((window as any).triggerAdminPanel) {
                   (window as any).triggerAdminPanel(true);
+                  // Ensure we show the dashboard tab
+                  const event = new CustomEvent('setAdminTab', { detail: 'dashboard' });
+                  window.dispatchEvent(event);
                 }
               }
             }, 100);
@@ -65,7 +67,7 @@ export default function SubmissionDetails() {
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
-                ID: #{submission.id}
+                CASE ID: {submission.caseId}
               </div>
             </div>
           </CardHeader>
