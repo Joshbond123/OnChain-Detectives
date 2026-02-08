@@ -41,8 +41,12 @@ export default function SubmissionDetails() {
           onClick={() => {
             setLocation("/");
             setTimeout(() => {
-              if ((window as any).triggerAdminPanel) {
-                (window as any).triggerAdminPanel();
+              const adminState = localStorage.getItem("admin_auth");
+              if (adminState === "true") {
+                // If we have a local session marker, try to trigger the panel directly
+                if ((window as any).triggerAdminPanel) {
+                  (window as any).triggerAdminPanel(true);
+                }
               }
             }, 100);
           }}

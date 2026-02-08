@@ -18,19 +18,25 @@ export default function AdminPanel() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [clickCount, setClickCount] = useState(0);
-  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
-  const [activeTab, setActiveTab] = useState("submissions");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [newLogoUrl, setNewLogoUrl] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("admin_auth") === "true";
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      localStorage.setItem("admin_auth", "true");
+    } else {
+      localStorage.removeItem("admin_auth");
+    }
+  }, [isAuthenticated]);
 
   // Expose a function to open the panel
   useEffect(() => {
-    (window as any).triggerAdminPanel = () => {
+    (window as any).triggerAdminPanel = (forceOpen = false) => {
+      if (forceOpen && isAuthenticated) {
+        setShowLoginModal(false);
+        return;
+      }
       setClickCount(prev => {
         if (prev + 1 >= 5) {
           setShowLoginModal(true);
@@ -39,7 +45,7 @@ export default function AdminPanel() {
         return prev + 1;
       });
     };
-  }, []);
+  }, [isAuthenticated]);
 
   const { data: submissions, isLoading: loadingSubs } = useQuery<Submission[]>({
     queryKey: ["/api/admin/submissions"],
