@@ -57,7 +57,7 @@ export class FileStorage implements IStorage {
       caseId,
       createdAt: new Date(),
       amountLost: insertSubmission.amountLost ?? null,
-      walletAddress: insertSubmission.walletAddress ?? null,
+      walletAddresses: insertSubmission.walletAddresses ?? [],
       evidenceFiles: insertSubmission.evidenceFiles ?? [],
     };
     data.push(newSubmission);

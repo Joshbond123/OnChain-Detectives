@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield, CheckCircle2, Loader2, Upload, Wallet, Database, User, Lock, Trash2 } from "lucide-react";
+import { Shield, CheckCircle2, Loader2, Upload, Wallet, Database, User, Lock, Trash2, Plus } from "lucide-react";
 import { useState, useRef } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -28,6 +28,7 @@ export default function CaseForm() {
   const { toast } = useToast();
   const [rawFiles, setRawFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<{ name: string; url: string }[]>([]);
+  const [walletAddresses, setWalletAddresses] = useState<string[]>([""]);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,7 +37,7 @@ export default function CaseForm() {
     defaultValues: {
       name: "",
       email: "",
-      walletAddress: "",
+      walletAddresses: [""],
       description: "",
       amountLost: "",
       evidenceFiles: [],
@@ -53,8 +54,11 @@ export default function CaseForm() {
       formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("description", data.description);
-      if (data.walletAddress) formData.append("walletAddress", data.walletAddress);
       if (data.amountLost) formData.append("amountLost", data.amountLost);
+      
+      walletAddresses.filter(w => w.trim() !== "").forEach((addr) => {
+        formData.append("walletAddresses[]", addr);
+      });
       
       rawFiles.forEach((file) => {
         formData.append("evidence", file);
@@ -79,7 +83,8 @@ export default function CaseForm() {
       });
       
       const whatsappNumber = settings?.whatsappNumber || "1234567890";
-      const message = `Hello OnChain Detectives,\n\nI just submitted a recovery case.\n\n*Case ID:* ${data.caseId}\n\n*User Details*\nName: ${data.name}\nEmail: ${data.email}\n\n*Scam Details*\nWallet: ${data.walletAddress || 'Not provided'}\nAmount Lost: ${data.amountLost || 'Not specified'}\nDescription: ${data.description}`;
+      const walletsStr = walletAddresses.filter(w => w.trim() !== "").join(", ");
+      const message = `Hello OnChain Detectives,\n\nI just submitted a recovery case.\n\n*Case ID:* ${data.caseId}\n\n*User Details*\nName: ${data.name}\nEmail: ${data.email}\n\n*Scam Details*\nWallets: ${walletsStr || 'Not provided'}\nAmount Lost: ${data.amountLost || 'Not specified'}\nDescription: ${data.description}`;
       const encodedMessage = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
       
@@ -135,8 +140,27 @@ export default function CaseForm() {
     }
   };
 
+  const addWalletAddress = () => {
+    setWalletAddresses([...walletAddresses, ""]);
+  };
+
+  const removeWalletAddress = (index: number) => {
+    if (walletAddresses.length > 1) {
+      const updated = walletAddresses.filter((_, i) => i !== index);
+      setWalletAddresses(updated);
+    }
+  };
+
+  const updateWalletAddress = (index: number, value: string) => {
+    const updated = [...walletAddresses];
+    updated[index] = value;
+    setWalletAddresses(updated);
+    form.setValue("walletAddresses", updated);
+  };
+
   function onSubmit(data: InsertSubmission) {
-    if (!data.walletAddress && rawFiles.length === 0) {
+    const activeWallets = walletAddresses.filter(w => w.trim() !== "");
+    if (activeWallets.length === 0 && rawFiles.length === 0) {
       toast({
         title: "Evidence Required",
         description: "Please provide either a wallet address or upload evidence screenshots.",
@@ -266,20 +290,44 @@ export default function CaseForm() {
                         To help us investigate, please provide the scammer's wallet address, upload screenshots of your evidence, or provide both.
                       </p>
                       
-                      <FormField
-                        control={form.control}
-                        name="walletAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-zinc-300">Scammer's Wallet Address</FormLabel>
-                            <FormControl>
-                              <Input placeholder="0x..." className="bg-zinc-950 border-white/10 font-mono" {...field} value={field.value || ""} />
-                            </FormControl>
-                            <FormDescription className="text-xs">The wallet address where you sent the cryptocurrency.</FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <FormLabel className="text-zinc-300">Scammer's Wallet Addresses</FormLabel>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-7 text-[10px] gap-1"
+                            onClick={addWalletAddress}
+                          >
+                            <Plus className="h-3 w-3" /> Add Another
+                          </Button>
+                        </div>
+                        {walletAddresses.map((addr, idx) => (
+                          <div key={idx} className="flex gap-2">
+                            <div className="flex-1">
+                              <Input 
+                                placeholder="0x..." 
+                                className="bg-zinc-950 border-white/10 font-mono" 
+                                value={addr}
+                                onChange={(e) => updateWalletAddress(idx, e.target.value)}
+                              />
+                            </div>
+                            {walletAddresses.length > 1 && (
+                              <Button 
+                                type="button" 
+                                variant="destructive" 
+                                size="icon" 
+                                className="h-9 w-9 shrink-0"
+                                onClick={() => removeWalletAddress(idx)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                        <FormDescription className="text-xs">Provide the wallet address(es) where you sent the cryptocurrency.</FormDescription>
+                      </div>
 
                       <div className="space-y-4">
                         <div className="flex flex-col gap-1">

@@ -7,7 +7,7 @@ export const submissions = pgTable("submissions", {
   caseId: text("case_id").notNull().unique(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  walletAddress: text("wallet_address"),
+  walletAddresses: text("wallet_addresses").array(),
   description: text("description").notNull(),
   amountLost: text("amount_lost"),
   evidenceFiles: text("evidence_files").array(),
@@ -27,7 +27,7 @@ export const insertSubmissionSchema = createInsertSchema(submissions).omit({
   createdAt: true,
 }).extend({
   email: z.string().email("Invalid email address"),
-  walletAddress: z.string().min(10, "Wallet address too short").optional().or(z.literal("")),
+  walletAddresses: z.array(z.string().min(10, "Wallet address too short")).optional().default([]),
 });
 
 export const insertAdminSettingsSchema = createInsertSchema(adminSettings).omit({

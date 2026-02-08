@@ -62,9 +62,17 @@ export async function registerRoutes(
       const files = (req.files as Express.Multer.File[]) || [];
       const evidenceFiles = files.map(f => `/uploads/${f.filename}`);
 
-      // Handle the body parsing which might come as strings from FormData
+      // Handle multi-value fields from FormData
+      let walletAddresses = req.body.walletAddresses;
+      if (typeof walletAddresses === "string") {
+        walletAddresses = [walletAddresses];
+      } else if (!walletAddresses) {
+        walletAddresses = [];
+      }
+
       const body = {
         ...req.body,
+        walletAddresses,
         evidenceFiles,
       };
 

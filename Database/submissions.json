@@ -3,33 +3,15 @@
     "name": "Joshua Adeniran",
     "email": "adeniranj787@gmail.com",
     "walletAddress": "132, two roa, ibadan oyo state",
-    "description": "I don't know",
+    "description": "Mkgdzzfyz",
     "amountLost": "$5000",
-    "platform": "Bingo ",
-    "evidenceFiles": [],
+    "evidenceFiles": [
+      "/uploads/evidence-1770539023664-282769402.jpg",
+      "/uploads/evidence-1770539042219-473469926.jpg",
+      "/uploads/evidence-1770539049330-450172957.jpg"
+    ],
     "id": 1,
-    "createdAt": "2026-02-07T22:37:32.237Z"
-  },
-  {
-    "name": "Joshua Adeniran",
-    "email": "adeniranj787@gmail.com",
-    "walletAddress": "132, two roa, ibadan oyo state",
-    "description": "Ismonl",
-    "amountLost": "$5000",
-    "platform": "Bingo ",
-    "evidenceFiles": [],
-    "id": 2,
-    "createdAt": "2026-02-07T22:38:12.409Z"
-  },
-  {
-    "name": "James victor",
-    "email": "nj787@gmail.com",
-    "walletAddress": "&*@&#,;#,'djjxjdjjdjjdjdj",
-    "description": "I met this scammers on tiktok",
-    "amountLost": "$5000",
-    "evidenceFiles": [],
-    "id": 3,
-    "caseId": "68643QV",
-    "createdAt": "2026-02-08T07:58:11.909Z"
+    "caseId": "99301CB",
+    "createdAt": "2026-02-08T08:24:10.450Z"
   }
 ]

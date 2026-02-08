@@ -85,8 +85,18 @@ export default function SubmissionDetails() {
                 </div>
                 <div className="bg-zinc-950 p-4 rounded-lg border border-white/5 space-y-4">
                   <div>
-                    <label className="text-[10px] text-zinc-500 uppercase font-bold block mb-1">Wallet Address / Destination</label>
-                    <code className="text-sm text-zinc-300 break-all">{submission.walletAddress || "Not provided"}</code>
+                    <label className="text-[10px] text-zinc-500 uppercase font-bold block mb-1">Wallet Addresses / Destinations</label>
+                    <div className="space-y-2">
+                      {submission.walletAddresses && submission.walletAddresses.length > 0 ? (
+                        submission.walletAddresses.map((addr, idx) => (
+                          <code key={idx} className="text-sm text-zinc-300 break-all block p-2 bg-white/5 rounded">
+                            {addr}
+                          </code>
+                        ))
+                      ) : (
+                        <span className="text-sm text-zinc-500 italic">No wallet addresses provided</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
