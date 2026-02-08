@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Submission } from "@shared/schema";
-import { UICard, UICardContent, UICardHeader, UICardTitle, CardDescription } from "@/components/ui/card";
+import { Card as UICard, CardContent as UICardContent, CardHeader as UICardHeader, CardTitle as UICardTitle, CardDescription } from "@/components/ui/card";
 import { LayoutDashboard, Users, Clock, AlertCircle } from "lucide-react";
 
 export default function AdminDashboard() {
