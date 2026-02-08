@@ -79,19 +79,37 @@ export default function AdminPanel() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setIsUploading(true);
+    // Local preview
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64 = reader.result as string;
-      setNewLogoUrl(base64);
-      setIsUploading(false);
+      setNewLogoUrl(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
-  const saveLogo = () => {
-    if (newLogoUrl) {
-      updateSettingsMutation.mutate({ logoUrl: newLogoUrl });
+  const saveLogo = async () => {
+    if (fileInputRef.current?.files?.[0]) {
+      setIsUploading(true);
+      try {
+        const formData = new FormData();
+        formData.append("logo", fileInputRef.current.files[0]);
+        
+        const res = await fetch("/api/admin/logo", {
+          method: "POST",
+          body: formData,
+        });
+        
+        if (!res.ok) throw new Error("Upload failed");
+        
+        const updatedSettings = await res.json();
+        queryClient.setQueryData(["/api/admin/settings"], updatedSettings);
+        setNewLogoUrl(null);
+        toast({ title: "Success", description: "Logo updated successfully" });
+      } catch (error) {
+        toast({ title: "Error", description: "Failed to upload logo", variant: "destructive" });
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
