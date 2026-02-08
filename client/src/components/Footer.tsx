@@ -1,6 +1,12 @@
-import { ShieldCheck, Mail, Phone, MapPin, Twitter, Github, Linkedin } from "lucide-react";
+import { ShieldCheck, MapPin, Twitter, Github, Linkedin } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import type { AdminSettings } from "@shared/schema";
 
 export function Footer() {
+  const { data: settings } = useQuery<AdminSettings>({
+    queryKey: ["/api/admin/settings"],
+  });
+
   return (
     <footer className="bg-black border-t border-white/5 pt-24 pb-12 relative overflow-hidden">
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
@@ -22,25 +28,13 @@ export function Footer() {
           </div>
           
           <div className="lg:col-span-4">
-            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Global Operations</h4>
+            <h4 className="font-display font-bold text-white mb-8 uppercase tracking-widest text-sm">Operational Status</h4>
             <ul className="space-y-5">
-              <li className="flex items-center gap-3 text-muted-foreground group">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <span className="text-sm font-medium">cases@onchaindetectives.com</span>
-              </li>
-              <li className="flex items-center gap-3 text-muted-foreground group">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  <Phone className="w-4 h-4" />
-                </div>
-                <span className="text-sm font-medium">+1 (555) 012-3456</span>
-              </li>
               <li className="flex items-center gap-3 text-muted-foreground group">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <span className="text-sm font-medium">Secure Operations Center: London, UK</span>
+                <span className="text-sm font-medium">{settings?.address || "Secure Operations Center: London, UK"}</span>
               </li>
             </ul>
           </div>

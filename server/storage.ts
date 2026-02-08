@@ -85,7 +85,14 @@ export class FileStorage implements IStorage {
   async getAdminSettings(): Promise<AdminSettings> {
     let settings = await this.readJson<AdminSettings | null>(this.settingsPath, null);
     if (!settings) {
-      settings = { id: 1, password: "12345", whatsappNumber: "", logoUrl: null, notificationsEnabled: "false" };
+      settings = { 
+        id: 1, 
+        password: "12345", 
+        whatsappNumber: "", 
+        logoUrl: null, 
+        notificationsEnabled: "false",
+        address: "Secure Operations Center: London, UK"
+      };
       await this.writeJson(this.settingsPath, settings);
     }
     return settings;

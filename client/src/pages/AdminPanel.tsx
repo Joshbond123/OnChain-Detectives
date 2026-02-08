@@ -265,6 +265,19 @@ export default function AdminPanel() {
           </Button>
 
           <Button 
+            variant={activeTab === "general" ? "secondary" : "ghost"}
+            className="w-full justify-start gap-3 h-11"
+            onClick={() => {
+              setActiveTab("general");
+              setSidebarOpen(false);
+            }}
+            data-testid="nav-general"
+          >
+            <Settings className="h-4 w-4" />
+            General
+          </Button>
+
+          <Button 
             variant={activeTab === "branding" ? "secondary" : "ghost"}
             className="w-full justify-start gap-3 h-11"
             onClick={() => {
@@ -404,6 +417,40 @@ export default function AdminPanel() {
                       )}
                     </TableBody>
                   </Table>
+                </UICardContent>
+              </UICard>
+            </div>
+          )}
+
+          {activeTab === "general" && (
+            <div className="max-w-md mx-auto">
+              <UICard className="bg-zinc-900 border-white/10">
+                <UICardHeader>
+                  <UICardTitle className="flex items-center gap-2">
+                    <Settings className="h-5 w-5 text-primary" /> General Settings
+                  </UICardTitle>
+                  <CardDescription>Configure basic site information</CardDescription>
+                </UICardHeader>
+                <UICardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Office Address</label>
+                    <Input
+                      id="office-address"
+                      placeholder="e.g. London, UK"
+                      defaultValue={settings?.address}
+                      className="bg-zinc-800 border-white/10 text-white"
+                    />
+                  </div>
+                  <Button 
+                    className="w-full"
+                    onClick={() => {
+                      const val = (document.getElementById("office-address") as HTMLInputElement).value;
+                      updateSettingsMutation.mutate({ address: val });
+                    }}
+                    disabled={updateSettingsMutation.isPending}
+                  >
+                    {updateSettingsMutation.isPending ? "Saving..." : "Save Address"}
+                  </Button>
                 </UICardContent>
               </UICard>
             </div>

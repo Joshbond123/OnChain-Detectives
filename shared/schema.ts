@@ -20,6 +20,7 @@ export const adminSettings = pgTable("admin_settings", {
   whatsappNumber: text("whatsapp_number").notNull().default(""),
   logoUrl: text("logo_url"),
   notificationsEnabled: text("notifications_enabled").notNull().default("false"),
+  address: text("address").notNull().default("Secure Operations Center: London, UK"),
 });
 
 export const pushSubscriptions = pgTable("push_subscriptions", {
