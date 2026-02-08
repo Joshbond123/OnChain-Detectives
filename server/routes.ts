@@ -1,12 +1,25 @@
 import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
-import { insertSubmissionSchema } from "@shared/schema";
+import { insertSubmissionSchema, insertPushSubscriptionSchema } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
 import path from "path";
 import express from "express";
 import fs from "fs/promises";
+import webpush from "web-push";
+
+// VAPID keys should be in environment variables in a real app
+const vapidKeys = {
+  publicKey: process.env.VAPID_PUBLIC_KEY || "BM6YhS0l9Xf2kFwpjAXU7acTFagBOjv4gvpymA4ZHU0oxS5GaptMbar8i083hiscFngCoKAo_dXrZlK0axHExw4",
+  privateKey: process.env.VAPID_PRIVATE_KEY || "FxaZXzm-C0UHyssilORnM_MSgNH2j_gpZJqFjqCHG1g"
+};
+
+webpush.setVapidDetails(
+  "mailto:admin@example.com",
+  vapidKeys.publicKey,
+  vapidKeys.privateKey
+);
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -78,6 +91,36 @@ export async function registerRoutes(
 
       const data = insertSubmissionSchema.parse(body);
       const submission = await storage.createSubmission(data);
+
+      // Trigger push notification if enabled
+      const settings = await storage.getAdminSettings();
+      if (settings.notificationsEnabled === "true") {
+        const subscriptions = await storage.getPushSubscriptions();
+        const notificationPayload = JSON.stringify({
+          title: "New Case Submission",
+          body: `Case ID: ${submission.caseId}\nEmail: ${submission.email}`,
+          data: {
+            caseId: submission.caseId,
+            id: submission.id
+          }
+        });
+
+        Promise.all(subscriptions.map(sub => {
+          return webpush.sendNotification({
+            endpoint: sub.endpoint,
+            keys: {
+              p256dh: sub.p256dh,
+              auth: sub.auth
+            }
+          }, notificationPayload).catch(err => {
+            if (err.statusCode === 410 || err.statusCode === 404) {
+              return storage.removePushSubscription(sub.endpoint);
+            }
+            console.error("Push notification error:", err);
+          });
+        }));
+      }
+
       res.status(201).json(submission);
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -125,6 +168,26 @@ export async function registerRoutes(
     } else {
       res.status(401).json({ message: "Invalid password" });
     }
+  });
+
+  // Push Notification Routes
+  app.get("/api/admin/push/vapid-key", (req, res) => {
+    res.json({ publicKey: vapidKeys.publicKey });
+  });
+
+  app.post("/api/admin/push/subscribe", async (req, res) => {
+    try {
+      const data = insertPushSubscriptionSchema.parse(req.body);
+      const sub = await storage.addPushSubscription(data);
+      res.status(201).json(sub);
+    } catch (err) {
+      res.status(400).json({ message: "Invalid subscription data" });
+    }
+  });
+
+  app.get("/api/admin/push/subscriptions", async (req, res) => {
+    const subs = await storage.getPushSubscriptions();
+    res.json(subs);
   });
 
   return httpServer;

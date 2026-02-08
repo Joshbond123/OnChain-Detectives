@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import type { Submission, AdminSettings } from "@shared/schema";
-import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X, Eye, Calendar, User, Mail, Landmark, Wallet, ExternalLink, Trash2, FolderOpen, Upload, Loader2, Shield, ShieldCheck } from "lucide-react";
+import { Lock, Phone, Database, LogOut, LayoutDashboard, Settings, Menu, X, Eye, Calendar, User, Mail, Landmark, Wallet, ExternalLink, Trash2, FolderOpen, Upload, Loader2, Shield, ShieldCheck, Bell } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useLocation } from "wouter";
 
@@ -260,6 +262,19 @@ export default function AdminPanel() {
             <Settings className="h-4 w-4" />
             Branding
           </Button>
+
+          <Button 
+            variant={activeTab === "notifications" ? "secondary" : "ghost"}
+            className="w-full justify-start gap-3 h-11"
+            onClick={() => {
+              setActiveTab("notifications");
+              setSidebarOpen(false);
+            }}
+            data-testid="nav-notifications"
+          >
+            <Bell className="h-4 w-4" />
+            Notifications
+          </Button>
         </nav>
 
         <div className="p-4 border-t border-white/10">
@@ -507,6 +522,97 @@ export default function AdminPanel() {
                   </div>
                   <div className="text-xs text-muted-foreground bg-white/5 p-4 rounded-lg border border-white/5">
                     <p><strong>Note:</strong> Uploading a new logo will automatically update the header, admin screens, and the browser tab icon (favicon) across the entire site.</p>
+                  </div>
+                </UICardContent>
+              </UICard>
+            </div>
+          )}
+
+          {activeTab === "notifications" && (
+            <div className="max-w-md mx-auto space-y-6">
+              <UICard className="bg-zinc-900 border-white/10">
+                <UICardHeader>
+                  <UICardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5 text-primary" /> Notifications Settings
+                  </UICardTitle>
+                  <CardDescription>Enable real-time browser notifications for new cases</CardDescription>
+                </UICardHeader>
+                <UICardContent className="space-y-6">
+                  <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-950/50 border border-white/5">
+                    <div className="space-y-0.5">
+                      <Label className="text-white">Browser Notifications</Label>
+                      <p className="text-xs text-zinc-500">Enable or disable alerts globally</p>
+                    </div>
+                    <Switch 
+                      checked={settings?.notificationsEnabled === "true"}
+                      onCheckedChange={(checked) => {
+                        updateSettingsMutation.mutate({ notificationsEnabled: checked ? "true" : "false" });
+                      }}
+                      disabled={updateSettingsMutation.isPending}
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Device Status</div>
+                    <div className="p-4 rounded-lg bg-zinc-950/50 border border-white/5 space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-zinc-400">Permission:</span>
+                        <span className={`font-medium ${Notification.permission === 'granted' ? 'text-green-500' : Notification.permission === 'denied' ? 'text-red-500' : 'text-yellow-500'}`}>
+                          {Notification.permission}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-zinc-400">Current Device:</span>
+                        <span className="text-white truncate max-w-[150px]" title={navigator.userAgent}>
+                          {navigator.userAgent.split(') ')[0].split(' (')[1] || 'Unknown Device'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-white/10"
+                      onClick={async () => {
+                        try {
+                          const permission = await Notification.requestPermission();
+                          if (permission === 'granted') {
+                            const registration = await navigator.serviceWorker.register('/sw.js');
+                            const response = await fetch('/api/admin/push/vapid-key');
+                            const { publicKey } = await response.json();
+                            
+                            const subscription = await registration.pushManager.subscribe({
+                              userVisibleOnly: true,
+                              applicationServerKey: publicKey
+                            });
+
+                            const subData = subscription.toJSON();
+                            await fetch('/api/admin/push/subscribe', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                endpoint: subData.endpoint,
+                                p256dh: subData.keys?.p256dh,
+                                auth: subData.keys?.auth,
+                                userAgent: navigator.userAgent
+                              })
+                            });
+
+                            toast({ title: "Subscribed", description: "This device is now registered for notifications" });
+                          } else {
+                            toast({ title: "Permission Denied", description: "Please enable notifications in your browser settings", variant: "destructive" });
+                          }
+                        } catch (err) {
+                          console.error(err);
+                          toast({ title: "Error", description: "Failed to enable notifications", variant: "destructive" });
+                        }
+                      }}
+                    >
+                      {Notification.permission === 'granted' ? 'Re-sync Subscription' : 'Grant Permission'}
+                    </Button>
+                  </div>
+
+                  <div className="text-xs text-muted-foreground bg-white/5 p-4 rounded-lg border border-white/5">
+                    <p><strong>Info:</strong> Notifications are device-specific. You must grant permission on each browser/device you wish to receive alerts on.</p>
                   </div>
                 </UICardContent>
               </UICard>

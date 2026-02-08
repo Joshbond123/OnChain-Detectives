@@ -19,6 +19,16 @@ export const adminSettings = pgTable("admin_settings", {
   password: text("password").notNull().default("12345"),
   whatsappNumber: text("whatsapp_number").notNull().default(""),
   logoUrl: text("logo_url"),
+  notificationsEnabled: text("notifications_enabled").notNull().default("false"),
+});
+
+export const pushSubscriptions = pgTable("push_subscriptions", {
+  id: serial("id").primaryKey(),
+  endpoint: text("endpoint").notNull().unique(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const insertSubmissionSchema = createInsertSchema(submissions).omit({
@@ -34,7 +44,14 @@ export const insertAdminSettingsSchema = createInsertSchema(adminSettings).omit(
   id: true,
 });
 
+export const insertPushSubscriptionSchema = createInsertSchema(pushSubscriptions).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertSubmission = z.infer<typeof insertSubmissionSchema>;
 export type Submission = typeof submissions.$inferSelect;
 export type AdminSettings = typeof adminSettings.$inferSelect;
 export type InsertAdminSettings = z.infer<typeof insertAdminSettingsSchema>;
+export type PushSubscription = typeof pushSubscriptions.$inferSelect;
+export type InsertPushSubscription = z.infer<typeof insertPushSubscriptionSchema>;

@@ -1,10 +1,13 @@
 import {
   submissions,
   adminSettings,
+  pushSubscriptions,
   type InsertSubmission,
   type Submission,
   type AdminSettings,
-  type InsertAdminSettings
+  type InsertAdminSettings,
+  type PushSubscription,
+  type InsertPushSubscription
 } from "@shared/schema";
 import fs from "fs/promises";
 import path from "path";
@@ -15,11 +18,15 @@ export interface IStorage {
   deleteSubmission(id: number): Promise<void>;
   getAdminSettings(): Promise<AdminSettings>;
   updateAdminSettings(settings: Partial<InsertAdminSettings>): Promise<AdminSettings>;
+  addPushSubscription(sub: InsertPushSubscription): Promise<PushSubscription>;
+  getPushSubscriptions(): Promise<PushSubscription[]>;
+  removePushSubscription(endpoint: string): Promise<void>;
 }
 
 export class FileStorage implements IStorage {
   private submissionsPath = path.join(process.cwd(), "Database", "submissions.json");
   private settingsPath = path.join(process.cwd(), "Database", "admin_settings.json");
+  private pushSubscriptionsPath = path.join(process.cwd(), "Database", "push_subscriptions.json");
 
   private async readJson<T>(filePath: string, defaultValue: T): Promise<T> {
     try {
@@ -78,7 +85,7 @@ export class FileStorage implements IStorage {
   async getAdminSettings(): Promise<AdminSettings> {
     let settings = await this.readJson<AdminSettings | null>(this.settingsPath, null);
     if (!settings) {
-      settings = { id: 1, password: "12345", whatsappNumber: "", logoUrl: null };
+      settings = { id: 1, password: "12345", whatsappNumber: "", logoUrl: null, notificationsEnabled: "false" };
       await this.writeJson(this.settingsPath, settings);
     }
     return settings;
@@ -89,6 +96,31 @@ export class FileStorage implements IStorage {
     const updated = { ...current, ...updates };
     await this.writeJson(this.settingsPath, updated);
     return updated;
+  }
+
+  async addPushSubscription(sub: InsertPushSubscription): Promise<PushSubscription> {
+    const data = await this.readJson<PushSubscription[]>(this.pushSubscriptionsPath, []);
+    const existing = data.find(s => s.endpoint === sub.endpoint);
+    if (existing) return existing;
+
+    const newSub: PushSubscription = {
+      ...sub,
+      id: data.length + 1,
+      createdAt: new Date(),
+    };
+    data.push(newSub);
+    await this.writeJson(this.pushSubscriptionsPath, data);
+    return newSub;
+  }
+
+  async getPushSubscriptions(): Promise<PushSubscription[]> {
+    return await this.readJson<PushSubscription[]>(this.pushSubscriptionsPath, []);
+  }
+
+  async removePushSubscription(endpoint: string): Promise<void> {
+    const data = await this.readJson<PushSubscription[]>(this.pushSubscriptionsPath, []);
+    const filtered = data.filter(s => s.endpoint !== endpoint);
+    await this.writeJson(this.pushSubscriptionsPath, filtered);
   }
 }
 
