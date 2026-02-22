@@ -1,7 +1,11 @@
+// background-task-manager.ts
+// Optimized for Render Free Tier (750h limit)
+// Tasks run only when triggered and stop immediately after completion.
+
 import { EventEmitter } from 'events';
 
 class BackgroundTaskManager extends EventEmitter {
-    private tasks: { [key: string]: NodeJS.Timeout } = {};
+    private tasks: Map<string, NodeJS.Timeout> = new Map();
 
     constructor() {
         super();
@@ -9,38 +13,50 @@ class BackgroundTaskManager extends EventEmitter {
         this.on('stopTask', this.stopTask);
     }
 
-    // Method to start a new background task
-    // It runs for a specific duration and then stops.
-    // This prevents continuous background execution on Render Free Tier.
-    startTask(taskName: string, duration: number, callback?: () => void) {
-        if (this.tasks[taskName]) {
-            console.log(`Task ${taskName} is already running.`);
+    /**
+     * Starts a background task that auto-terminates.
+     * @param taskName Unique name for the task
+     * @param duration Max duration in ms before auto-stop
+     * @param taskFn The actual work to perform
+     */
+    async startTask(taskName: string, duration: number, taskFn: () => Promise<void>) {
+        if (this.tasks.has(taskName)) {
+            console.log(`[TaskManager] Task "${taskName}" is already active.`);
             return;
         }
-        console.log(`Starting task: ${taskName}`);
-        
-        // Execute the task logic if provided
-        if (callback) {
-            try {
-                callback();
-            } catch (err) {
-                console.error(`Error executing task ${taskName}:`, err);
-            }
-        }
 
-        this.tasks[taskName] = setTimeout(() => {
-            console.log(`Task ${taskName} completed and auto-stopped.`);
+        console.log(`[TaskManager] Starting task: ${taskName}`);
+        
+        // Set an absolute safety timeout to ensure it stops
+        const timeout = setTimeout(() => {
+            console.log(`[TaskManager] Task "${taskName}" reached safety timeout. Force stopping.`);
             this.stopTask(taskName);
         }, duration);
+
+        this.tasks.set(taskName, timeout);
+
+        try {
+            await taskFn();
+            console.log(`[TaskManager] Task "${taskName}" completed successfully.`);
+        } catch (error) {
+            console.error(`[TaskManager] Task "${taskName}" failed:`, error);
+        } finally {
+            this.stopTask(taskName);
+        }
     }
 
-    // Method to stop a specified background task
     stopTask(taskName: string) {
-        if (this.tasks[taskName]) {
-            clearTimeout(this.tasks[taskName]);
-            delete this.tasks[taskName];
-            console.log(`Task ${taskName} stopped.`);
+        const timeout = this.tasks.get(taskName);
+        if (timeout) {
+            clearTimeout(timeout);
+            this.tasks.delete(taskName);
+            console.log(`[TaskManager] Task "${taskName}" has been stopped.`);
         }
+    }
+
+    // Check if any tasks are running
+    hasActiveTasks(): boolean {
+        return this.tasks.size > 0;
     }
 }
 
