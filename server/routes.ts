@@ -35,6 +35,8 @@ const upload = multer({
   }
 });
 
+import { taskManager } from "./background-task-manager";
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -105,20 +107,22 @@ export async function registerRoutes(
           }
         });
 
-        Promise.all(subscriptions.map(sub => {
-          return webpush.sendNotification({
-            endpoint: sub.endpoint,
-            keys: {
-              p256dh: sub.p256dh,
-              auth: sub.auth
-            }
-          }, notificationPayload).catch((err: any) => {
-            if (err.statusCode === 410 || err.statusCode === 404) {
-              return storage.removePushSubscription(sub.endpoint);
-            }
-            console.error("Push notification error:", err);
-          });
-        }));
+        taskManager.emit('startTask', 'sendPushNotifications', 30000, async () => {
+          await Promise.all(subscriptions.map(sub => {
+            return webpush.sendNotification({
+              endpoint: sub.endpoint,
+              keys: {
+                p256dh: sub.p256dh,
+                auth: sub.auth
+              }
+            }, notificationPayload).catch((err: any) => {
+              if (err.statusCode === 410 || err.statusCode === 404) {
+                return storage.removePushSubscription(sub.endpoint);
+              }
+              console.error("Push notification error:", err);
+            });
+          }));
+        });
       }
 
       res.status(201).json(submission);

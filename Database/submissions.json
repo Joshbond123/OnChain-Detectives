@@ -31,5 +31,18 @@
     "id": 2,
     "caseId": "86984OO",
     "createdAt": "2026-02-08T15:40:47.507Z"
+  },
+  {
+    "name": "ShadowCase Files",
+    "email": "cryptoguardian10@gmail.com",
+    "walletAddresses": [
+      "Jjshevegsyev"
+    ],
+    "description": "Hsibgeyhve kehgeyebueeb",
+    "amountLost": "$700,00",
+    "evidenceFiles": [],
+    "id": 3,
+    "caseId": "69397AO",
+    "createdAt": "2026-02-22T00:31:13.483Z"
   }
 ]

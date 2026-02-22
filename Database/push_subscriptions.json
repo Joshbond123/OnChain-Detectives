@@ -1,18 +1,10 @@
 [
   {
-    "endpoint": "https://fcm.googleapis.com/fcm/send/c_vH84qspQU:APA91bESIvenAftr19bWbn6xgvqwsCvePp3_Gpd3NTwwUN6x-9kEf6Bdu__VZDuF0yEXJ1bnmP58zteKBRFcfct62atbIJtaKYA5mJTVgUuAVtRycYIfkCfUWGTLwtLJR6wKElmxblqy",
-    "p256dh": "BARhpCiwSsmdSwOS8gV2_IKnQkLtAOKjTW4OzIMytC6H1S8twRiWa62Zr5ndEITjeWAyZ8IGHlrWbE8O8c1eltU",
-    "auth": "890r85vvZW1FZUbPmAZ03g",
+    "endpoint": "https://fcm.googleapis.com/fcm/send/dLtbbcIhv0U:APA91bGnDu7NsIFjwTMYVOhH0k7i0OvOACvWDgFWc8-XboBOVnK15VA9ICD0TIVARHyrz9MtssLYGCNZFoI_QhHMOCRPLLlnsHcLcPLZaOtJBG--k0QeLTeG-4Nm71cqsEXJimucD8bC",
+    "p256dh": "BCONzHQyNuR6nKNV3JHUNfQZwDvUXnHtVP7O6l5DLSIR7M1PIBxgKKJo9AkSVvOQIOmk018NYT2uuP44CWvxU3Y",
+    "auth": "JCLpMq6ScbLShU4udRSDVw",
     "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36",
-    "id": 1,
-    "createdAt": "2026-02-08T11:21:25.338Z"
-  },
-  {
-    "endpoint": "https://fcm.googleapis.com/fcm/send/ek3_ISzAXsI:APA91bF6CTNXS2XdGE6NFspSEtI47qshfeHDTL4Lcv3QkBK-kqrHkYC0J8928x5o218u3p2UN7A7aknOwsyqHYwkl2myfDEiGjVkR3LfgCOOy0yLUfIMUUJsjyGwL8Nt_LBCOldlzPPT",
-    "p256dh": "BBRE73MMGPU9cHCq5M5nepAST3rAt77xXGFUUp6wamgD_5CCTh_1LhHQpdMlRPx1H4c9xRp0MkKEp2ztriytMsU",
-    "auth": "Xlba662j67SRVQmtANPRgw",
-    "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36",
-    "id": 2,
-    "createdAt": "2026-02-08T15:48:10.632Z"
+    "id": 3,
+    "createdAt": "2026-02-22T00:30:21.379Z"
   }
 ]
