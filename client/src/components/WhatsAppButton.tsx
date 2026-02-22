@@ -8,8 +8,10 @@ export function WhatsAppButton() {
     queryKey: ["/api/admin/settings"],
   });
 
-  const whatsappNumber = settings?.whatsappNumber || "1234567890";
-  const whatsappUrl = `https://wa.me/${whatsappNumber}`;
+  const whatsappNumber = settings?.whatsappNumber?.replace(/\s+/g, '') || "";
+  const whatsappUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}` : "#";
+
+  if (!whatsappNumber) return null;
 
   return (
     <motion.a

@@ -10,14 +10,26 @@ class BackgroundTaskManager extends EventEmitter {
     }
 
     // Method to start a new background task
-    startTask(taskName: string, duration: number) {
+    // It runs for a specific duration and then stops.
+    // This prevents continuous background execution on Render Free Tier.
+    startTask(taskName: string, duration: number, callback?: () => void) {
         if (this.tasks[taskName]) {
             console.log(`Task ${taskName} is already running.`);
             return;
         }
         console.log(`Starting task: ${taskName}`);
+        
+        // Execute the task logic if provided
+        if (callback) {
+            try {
+                callback();
+            } catch (err) {
+                console.error(`Error executing task ${taskName}:`, err);
+            }
+        }
+
         this.tasks[taskName] = setTimeout(() => {
-            console.log(`Task ${taskName} completed.`);
+            console.log(`Task ${taskName} completed and auto-stopped.`);
             this.stopTask(taskName);
         }, duration);
     }
