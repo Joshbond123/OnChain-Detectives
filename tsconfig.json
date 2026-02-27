@@ -1,11 +1,22 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
+  "include": [
+    "client/src/main.tsx",
+    "client/src/App.tsx",
+    "client/src/index.css",
+    "client/src/pages/Dashboard.tsx",
+    "client/src/pages/not-found.tsx",
+    "client/src/lib/queryClient.ts",
+    "client/src/lib/utils.ts",
+    "shared/**/*",
+    "server/**/*"
+  ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
     "noEmit": true,
     "module": "ESNext",
+    "target": "ES2020",
     "strict": true,
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "preserve",

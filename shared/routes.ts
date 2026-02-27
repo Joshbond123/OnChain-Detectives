@@ -1,38 +1,16 @@
-import { z } from 'zod';
-import { insertSubmissionSchema, submissions } from './schema';
-
-export const errorSchemas = {
-  validation: z.object({
-    message: z.string(),
-    field: z.string().optional(),
-  }),
-  internal: z.object({
-    message: z.string(),
-  }),
-};
+import { z } from "zod";
+import { generationRequestSchema } from "./schema";
 
 export const api = {
-  submissions: {
+  generation: {
     create: {
-      method: 'POST' as const,
-      path: '/api/submissions',
-      input: insertSubmissionSchema,
+      method: "POST" as const,
+      path: "/api/generate",
+      input: generationRequestSchema,
       responses: {
-        201: z.custom<typeof submissions.$inferSelect>(),
-        400: errorSchemas.validation,
+        200: z.object({ id: z.string() }).passthrough(),
+        202: z.object({ queued: z.boolean() }),
       },
     },
   },
 };
-
-export function buildUrl(path: string, params?: Record<string, string | number>): string {
-  let url = path;
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (url.includes(`:${key}`)) {
-        url = url.replace(`:${key}`, String(value));
-      }
-    });
-  }
-  return url;
-}
